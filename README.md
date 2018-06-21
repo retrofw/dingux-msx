@@ -208,19 +208,20 @@ in 'cht' folder.  Those cheat codes would then be automatically loaded
 when you start the game.
 
 The CHT file format is the following :
-```#
-# Enable, Address, Value, Comment
-#
-1,36f,3,Cheat comment```
 
-  Using the Cheat menu you can search for modified bytes in RAM between
-  current time and the last time you saved the RAM. It might be very usefull to
-  find "poke" address by yourself, monitoring for example life numbers.
+    #
+    # Enable, Address, Value, Comment
+    #
+    1,36f,3,Cheat comment
 
-  To find a new "poke address" you can proceed as follow :
+Using the Cheat menu you can search for modified bytes in RAM between
+current time and the last time you saved the RAM. It might be very usefull to
+find "poke" address by yourself, monitoring for example life numbers.
 
-  Let's say you're playing "1942" and you want to find the memory
-  address where "number lives" is stored.
+To find a new "poke address" you can proceed as follow :
+
+Let's say you're playing "1942" and you want to find the memory
+address where "number lives" is stored.
 
   * Start a new game in 1942
   * Enter in the cheat menu. 
