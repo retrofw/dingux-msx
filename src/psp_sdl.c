@@ -1,32 +1,18 @@
 /*
-
-Copyright 2005-2011 - Ludovic Jacomme - All rights reserved.
-
-Redistribution and use in source and binary forms, with or without modification, are
-permitted provided that the following conditions are met:
-
-   1. Redistributions of source code must retain the above copyright notice, this list of
-      conditions and the following disclaimer.
-
-   2. Redistributions in binary form must reproduce the above copyright notice, this list
-      of conditions and the following disclaimer in the documentation and/or other materials
-      provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY LUDOVIC JACOMME 'AS IS'' AND ANY EXPRESS OR IMPLIED
-WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL LUDOVIC JACOMME OR
-CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-The views and conclusions contained in the software and documentation are those of the
-authors and should not be interpreted as representing official policies, either expressed
-or implied, of Ludovic Jacomme.
-
-*/
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,25 +22,36 @@ or implied, of Ludovic Jacomme.
 #include <png.h>
 
 #include "MSX.h"
+// #include "video.h"
 #include "psp_sdl.h"
 #include "psp_danzeff.h"
 
-  extern unsigned char psp_font_8x8[];
-  extern unsigned char psp_font_6x10[];
+extern unsigned char psp_font_8x8[];
+extern unsigned char psp_font_6x10[];
 
-  unsigned char *psp_font;
-  int            psp_font_width  = 8; 
-  int            psp_font_height = 8; 
+unsigned char *psp_font;
+int            psp_font_width  = 8;
+int            psp_font_height = 8;
 
-  SDL_Surface *back_surface;
-  SDL_Surface *back2_surface;
+SDL_Surface *back_surface;
+SDL_Surface *back2_surface;
+SDL_Surface *ScreenSurface;
 
-  SDL_Surface *background_surface = NULL;
-  SDL_Surface *blit_surface;
-  SDL_Surface *help_surface;
-  SDL_Surface *splash_surface;
-  SDL_Surface *thumb_surface;
-  SDL_Surface *save_surface;
+SDL_Surface *background_surface = NULL;
+SDL_Surface *blit_surface;
+SDL_Surface *help_surface;
+SDL_Surface *splash_surface;
+SDL_Surface *thumb_surface;
+SDL_Surface *save_surface;
+
+#define SDL_DEFAULT_VIDEO_FLAGS SDL_HWSURFACE
+#if defined(DOUBLEBUF)
+#define SDL_VIDEO_FLAGS SDL_DEFAULT_VIDEO_FLAGS | SDL_DOUBLEBUF
+#else
+#if defined(TRIPLEBUF)
+#define SDL_VIDEO_FLAGS SDL_DEFAULT_VIDEO_FLAGS | SDL_TRIPLEBUF
+#endif
+#endif
 
 uint
 psp_sdl_rgb(uchar R, uchar G, uchar B)
@@ -62,10 +59,10 @@ psp_sdl_rgb(uchar R, uchar G, uchar B)
   return SDL_MapRGB(back_surface->format, R,G,B);
 }
 
-ushort *
+u16 *
 psp_sdl_get_vram_addr(uint x, uint y)
 {
-  ushort *vram = (ushort *)back_surface->pixels;
+  u16 *vram = (u16 *)back_surface->pixels;
   return vram + x + (y*PSP_LINE_SIZE);
 }
 
@@ -85,14 +82,14 @@ loc_psp_debug(char *file, int line, char *message)
     } else {
       current_col = 200;
     }
-    
+
     current_line = 10;
   }
   sprintf(buffer,"%s:%d %s", file, line, message);
   psp_sdl_print(current_col, current_line, buffer, psp_sdl_rgb(0xff,0xff,0xff) );
 }
 
-void 
+void
 psp_sdl_print(int x,int y, char *str, int color)
 {
   int index;
@@ -112,8 +109,8 @@ void
 psp_sdl_clear_screen(int color)
 {
   int x; int y;
-  ushort *vram = psp_sdl_get_vram_addr(0,0);
-  
+  u16 *vram = psp_sdl_get_vram_addr(0,0);
+
   for (y = 0; y < PSP_SDL_SCREEN_HEIGHT; y++) {
     for (x = 0; x < PSP_SDL_SCREEN_WIDTH; x++) {
       vram[x + (y*PSP_LINE_SIZE)] = color;
@@ -125,16 +122,21 @@ void
 psp_sdl_black_screen()
 {
   SDL_FillRect(back_surface,NULL,SDL_MapRGB(back_surface->format,0x0,0x0,0x0));
-  SDL_Flip(back_surface);
+  //SDL_Flip(back_surface);
   SDL_FillRect(back_surface,NULL,SDL_MapRGB(back_surface->format,0x0,0x0,0x0));
-  SDL_Flip(back_surface);
+  //SDL_Flip(back_surface);
+  
+  SDL_FillRect(ScreenSurface,NULL,SDL_MapRGB(ScreenSurface->format,0x0,0x0,0x0));
+  SDL_Flip(ScreenSurface);
+  SDL_FillRect(ScreenSurface,NULL,SDL_MapRGB(ScreenSurface->format,0x0,0x0,0x0));
+  SDL_Flip(ScreenSurface);
 }
 
 void
 psp_sdl_clear_blit(int color)
 {
   if (blit_surface) {
-    ushort *vram = (ushort *)blit_surface->pixels;
+    u16 *vram = (u16 *)blit_surface->pixels;
     int my_size = blit_surface->h * blit_surface->w;
     while (my_size > 0) {
       vram[--my_size] = color;
@@ -142,10 +144,10 @@ psp_sdl_clear_blit(int color)
   }
 }
 
-void 
-psp_sdl_draw_rectangle(int x, int y, int w, int h, int border, int mode) 
+void
+psp_sdl_draw_rectangle(int x, int y, int w, int h, int border, int mode)
 {
-  ushort *vram = (ushort *)psp_sdl_get_vram_addr(x, y);
+  u16 *vram = (u16 *)psp_sdl_get_vram_addr(x, y);
   int xo, yo;
   if (mode == PSP_SDL_XOR) {
     for (xo = 0; xo < w; xo++) {
@@ -170,10 +172,10 @@ psp_sdl_draw_rectangle(int x, int y, int w, int h, int border, int mode)
   }
 }
 
-void 
+void
 psp_sdl_fill_rectangle(int x, int y, int w, int h, int color, int mode)
 {
-  ushort *vram  = (ushort *)psp_sdl_get_vram_addr(x, y);
+  u16 *vram  = (u16 *)psp_sdl_get_vram_addr(x, y);
   int xo, yo;
   if (mode == PSP_SDL_XOR) {
     for (xo = 0; xo <= w; xo++) {
@@ -209,7 +211,7 @@ psp_sdl_get_back2_color(int x, int y)
   return color;
 }
 
-void 
+void
 psp_sdl_back2_rectangle(int x, int y, int w, int h)
 {
   if (! back2_surface) {
@@ -217,7 +219,7 @@ psp_sdl_back2_rectangle(int x, int y, int w, int h)
     return;
   }
 
-  ushort *vram  = (ushort *)psp_sdl_get_vram_addr(x, y);
+  u16 *vram  = (u16 *)psp_sdl_get_vram_addr(x, y);
 
   int xo, yo;
   for (xo = 0; xo <= w; xo++) {
@@ -227,7 +229,7 @@ psp_sdl_back2_rectangle(int x, int y, int w, int h)
   }
 }
 
-void 
+void
 psp_sdl_put_char(int x, int y, int color, int bgcolor, uchar c, int drawfg, int drawbg)
 {
   int cx;
@@ -235,8 +237,8 @@ psp_sdl_put_char(int x, int y, int color, int bgcolor, uchar c, int drawfg, int 
   int b;
   int index;
 
-  ushort *vram = (ushort *)psp_sdl_get_vram_addr(x, y);
-  index = ((ushort)c) * psp_font_height;
+  u16 *vram = (u16 *)psp_sdl_get_vram_addr(x, y);
+  index = ((u16)c) * psp_font_height;
 
   for (cy=0; cy< psp_font_height; cy++) {
     b = 1 << (psp_font_width - 1);
@@ -252,7 +254,7 @@ psp_sdl_put_char(int x, int y, int color, int bgcolor, uchar c, int drawfg, int 
   }
 }
 
-void 
+void
 psp_sdl_back2_put_char(int x, int y, int color, uchar c)
 {
   int cx;
@@ -265,9 +267,9 @@ psp_sdl_back2_put_char(int x, int y, int color, uchar c)
     return;
   }
 
-  ushort *vram  = (ushort *)psp_sdl_get_vram_addr(x, y);
+  u16 *vram  = (u16 *)psp_sdl_get_vram_addr(x, y);
 
-  index = ((ushort)c) * psp_font_height;
+  index = ((u16)c) * psp_font_height;
 
   for (cy=0; cy< psp_font_height; cy++) {
     bmask = 1 << (psp_font_width - 1);
@@ -294,7 +296,7 @@ psp_convert_utf8_to_iso_8859_1(unsigned char c1, unsigned char c2)
 }
 
 
-void 
+void
 psp_sdl_fill_print(int x,int y,const char *str, int color, int bgcolor)
 {
   int index;
@@ -415,6 +417,8 @@ psp_sdl_display_splash()
   psp_sdl_print(x, y, MSX_VERSION, col);
   psp_sdl_flip();
 
+  SDL_Delay(1000);
+
 
   while (index < 50) {
     gp2xCtrlPeekBufferPositive(&c, 1);
@@ -432,7 +436,20 @@ psp_sdl_unlock(void)
 void
 psp_sdl_flip(void)
 {
-  SDL_Flip(back_surface);
+  //SDL_Flip(back_surface);
+
+  if(SDL_MUSTLOCK(ScreenSurface)) SDL_LockSurface(ScreenSurface);
+  int x, y;
+  uint32_t *s = (uint32_t*)back_surface->pixels;
+  uint32_t *d = (uint32_t*)ScreenSurface->pixels;
+  for(y=0; y<240; y++){
+    for(x=0; x<160; x++){
+      *d++ = *s++;
+    }
+    d+= 160;
+  }
+  if(SDL_MUSTLOCK(ScreenSurface)) SDL_UnlockSurface(ScreenSurface);
+  SDL_Flip(ScreenSurface);
 }
 
 #define  systemRedShift      (back_surface->format->Rshift)
@@ -453,7 +470,7 @@ psp_sdl_save_png(SDL_Surface* my_surface, char* filename)
   FILE *fp = fopen(filename,"wb");
 
   if(!fp) return 0;
-  
+
   png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,
                                                 NULL,
                                                 NULL,
@@ -498,12 +515,12 @@ psp_sdl_save_png(SDL_Surface* my_surface, char* filename)
       u16 v = p[x];
 
       *b++ = ((v & systemRedMask  ) >> systemRedShift  ) << 3; // R
-      *b++ = ((v & systemGreenMask) >> systemGreenShift) << 2; // G 
+      *b++ = ((v & systemGreenMask) >> systemGreenShift) << 2; // G
       *b++ = ((v & systemBlueMask ) >> systemBlueShift ) << 3; // B
     }
     p += my_surface->pitch / 2;
     png_write_row(png_ptr,writeBuffer);
-     
+
     b = writeBuffer;
   }
 
@@ -561,9 +578,9 @@ psp_sdl_load_png(SDL_Surface* my_surface, char* filename)
     PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_PACKING |
     PNG_TRANSFORM_EXPAND | PNG_TRANSFORM_BGR , NULL);
 
-  png_uint_32 width = info_ptr->width;
-  png_uint_32 height = info_ptr->height;
-  int color_type = info_ptr->color_type;
+  png_uint_32 width = png_get_image_width( png_ptr,  info_ptr); //info_ptr->width;
+  png_uint_32 height = png_get_image_height( png_ptr,  info_ptr); //info_ptr->height;
+  int color_type = png_get_color_type(png_ptr,  info_ptr); //info_ptr->color_type;
 
   if ((width  > w) ||
       (height > h)) {
@@ -572,7 +589,8 @@ psp_sdl_load_png(SDL_Surface* my_surface, char* filename)
     return 0;
   }
 
-  png_byte **pRowTable = info_ptr->row_pointers;
+  //png_byte **pRowTable = png_get_rowbytes(png_ptr, info_ptr); //info_ptr->row_pointers;
+  png_byte **pRowTable = png_get_rows(png_ptr, info_ptr); //info_ptr->row_pointers;
   unsigned int x, y;
   u8 r, g, b;
 
@@ -620,7 +638,7 @@ psp_sdl_load_png(SDL_Surface* my_surface, char* filename)
 int
 psp_sdl_save_screenshot_png(char *filename)
 {
-  return psp_sdl_save_png(blit_surface, filename);
+  return psp_sdl_save_png(back_surface, filename);
 }
 
 int
@@ -631,12 +649,13 @@ psp_sdl_save_thumb_png(SDL_Surface* my_surface, char* filename)
   int y;
   u16* src_pixel = (u16*)blit_surface->pixels;
   u16* dst_pixel = (u16*)my_surface->pixels;
+  u16* scan_src_pixel = 0;
 
-  for (y = 0; y < MSX_HEIGHT; y += 2) {
-    for (x = 0; x < MSX_WIDTH; x += 2) {
-      *dst_pixel++ = src_pixel[x];
+  for (y = 0; y < SNAP_HEIGHT; y++) {
+    scan_src_pixel = src_pixel + (MSX_WIDTH * y * 3);
+    for (x = 0; x < SNAP_WIDTH; x++) {
+      *dst_pixel++ = scan_src_pixel[x * 3];
     }
-    src_pixel += MSX_WIDTH * 2;
   }
   /* Then save thumb in file */
   return psp_sdl_save_png(my_surface, filename);
@@ -644,7 +663,7 @@ psp_sdl_save_thumb_png(SDL_Surface* my_surface, char* filename)
 
 int
 psp_sdl_load_thumb_png(SDL_Surface* my_surface, char* filename)
-{ 
+{
   return psp_sdl_load_png( my_surface, filename);
 }
 
@@ -673,19 +692,21 @@ psp_sdl_init(void)
 
   psp_sdl_select_font_6x10();
 
-  back_surface=SDL_SetVideoMode(PSP_SDL_SCREEN_WIDTH,PSP_SDL_SCREEN_HEIGHT, 16 , 
-                                SDL_SWSURFACE);
+  ScreenSurface=SDL_SetVideoMode(320, 480, 16, SDL_HWSURFACE);
+  back_surface = SDL_CreateRGBSurface(SDL_SWSURFACE, PSP_SDL_SCREEN_WIDTH, PSP_SDL_SCREEN_HEIGHT, 16, 0, 0, 0, 0);
 
   if ( !back_surface) {
     return 0;
   }
 
-  blit_surface = SDL_CreateRGBSurface(SDL_SWSURFACE, 
-     SCR_WIDTH, SCR_HEIGHT,
-     back_surface->format->BitsPerPixel,
-     back_surface->format->Rmask,
-     back_surface->format->Gmask,
-     back_surface->format->Bmask, 0);
+
+  blit_surface = SDL_CreateRGBSurface(SDL_SWSURFACE,
+    MSX_WIDTH, MSX_HEIGHT,
+    back_surface->format->BitsPerPixel,
+    back_surface->format->Rmask,
+    back_surface->format->Gmask,
+    back_surface->format->Bmask, 0);
+
   SDL_ShowCursor(SDL_DISABLE);
 
   psp_sdl_display_splash();
@@ -697,15 +718,15 @@ psp_sdl_init(void)
   /* Create surface for save state */
   int Index = 0;
   for (Index = 0; Index < MSX_MAX_SAVE_STATE; Index++) {
-    MSX.msx_save_state[Index].surface = 
-       SDL_CreateRGBSurface(SDL_SWSURFACE, 
+    MSX.msx_save_state[Index].surface =
+       SDL_CreateRGBSurface(SDL_SWSURFACE,
                             SNAP_WIDTH, SNAP_HEIGHT,
                             back_surface->format->BitsPerPixel,
                             back_surface->format->Rmask,
                             back_surface->format->Gmask,
                             back_surface->format->Bmask, 0);
   }
-  save_surface = SDL_CreateRGBSurface(SDL_SWSURFACE, 
+  save_surface = SDL_CreateRGBSurface(SDL_SWSURFACE,
                             SNAP_WIDTH, SNAP_HEIGHT,
                             back_surface->format->BitsPerPixel,
                             back_surface->format->Rmask,
@@ -736,5 +757,11 @@ psp_sdl_select_font_6x10()
   psp_font = psp_font_6x10;
   psp_font_height = 10;
   psp_font_width  = 6;
+}
+
+void
+psp_sdl_set_palette(SDL_Color* c)
+{
+	SDL_SetPalette(back_surface, SDL_LOGPAL | SDL_PHYSPAL, c, 0, 32);
 }
 
