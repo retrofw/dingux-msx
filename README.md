@@ -13,7 +13,6 @@ Ludovic.Jacomme also known as Zx-81 (zx81.zx81@gmail.com)
 
 
 ## INTRODUCTION
-------------
 
 fMSX emulates MSX, MSX2, and MSX2+ 8bit home computers. It runs MSX/MSX2/MSX2+
 software on many different platforms including Windows, MacOS, Unix, MSDOS, 
@@ -27,7 +26,6 @@ for more information about it. Original fMSX code is under
 
 
 ## INSTALLATION
-------------
 
 Unzip the zip file, and copy the content of the directory local to your
 SD card.
@@ -39,7 +37,6 @@ http://zx81.zx81.free.fr, http://zx81.dcemu.co.uk or
 http://www.gp32x.com/
 
 ## CONTROL
-------------
 
 ### - Virtual keyboard
 
@@ -66,7 +63,7 @@ In the MSX emulator window
     LTrigger   Toogle with L keyboard mapping
     RTrigger   Toggle with R keyboard mapping
   
-  * LTrigger mapping :
+* LTrigger mapping :
   
     Dingux        MSX 
       
@@ -79,7 +76,7 @@ In the MSX emulator window
     Left       Left
     Right      Right
   
-  * RTrigger mapping :
+* RTrigger mapping :
   
     Dingux        MSX 
       
@@ -95,7 +92,7 @@ In the MSX emulator window
     Press Menu      to enter in emulator main menu.
     Press Select    open/close the virtual keyboard
 
-  * In the main menu
+* In the main menu
 
     RTrigger   Reset the emulator
 
@@ -115,7 +112,6 @@ figures.
 
 
 ## LOADING MSX ROM FILES
-------------
 
 If you want to load rom image in your emulator, you have to put your rom
 file (with .zip, .rom, .mx1 or .mx2 file extension) on your SD card
@@ -142,7 +138,6 @@ You may use the Trigger key to swap between the two virtual keyboard panels
 
 
 ## LOADING DISK FILES
-------------
 
 If you want to load disk image in the virtual drive A or B of your emulator,
 you have to put your disk file (with .dsk file extension, or gzipped disk file
@@ -160,7 +155,6 @@ You must eject any present rom before starting a disk, or only the
 ROM will start instead of your disk image.
 
 ## COMMENTS
-------------
 
 You can write your own comments for games using the "Comment" menu.  The first
 line of your comments would then be displayed in the file requester menu while
@@ -168,7 +162,6 @@ selecting the given file name (snapshot, disk, keyboard, settings).
 
 
 ## LOADING KEY MAPPING FILES
- ------------
 
 For given games, the default keyboard mapping between Dingux Keys and
 MSX keys, is not suitable, and the game can't be played on DinguxMSX.
@@ -198,7 +191,6 @@ keyboard, settings) with game name, to help you to recognize that game later.
 
 
 ## CHEAT CODE (.CHT)
-----------
 
 You can use cheat codes with Dingux-MSX You can add your own cheat codes in the
 cheat.txt file and then import them in the cheat menu.
@@ -254,7 +246,6 @@ and you can save it using the "Save cheat" menu.
 Let's enjoy 1942 with infinite life !!
 
 ## SETTINGS
- ------------
 
 You can modify several settings value in the settings menu of this emulator.
 The following parameters are available :
@@ -276,7 +267,6 @@ The following parameters are available :
                          200Mhz, and should be enough for most of all games.
 
 ## JOYSTICK SETTINGS
-------------
 
 You can modify several joystick settings value in the settings menu of this emulator.
 The following parameters are available :
@@ -287,7 +277,6 @@ The following parameters are available :
 
 
 ## COMPILATION
-------------
 
 It has been developped under Linux FC9 using gcc with DINGUX SDK. 
 All tests have been done using a Dingoo with Dingux installed
