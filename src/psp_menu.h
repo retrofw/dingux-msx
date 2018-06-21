@@ -1,9 +1,6 @@
-PLEASE, SEE EACH SOURCE FILE HEADER FOR THE OWNERSHIP AND LICENSE INFORMATION
-ON THIS SOURCE FILE. CERTAIN PARTS OF THIS SOFTWARE ARE PROPERTY OF MARAT
-FAYZULLIN AND ARE NOT COVERED BY THE FOLLOWING LICENSE.  IN ORDER TO USE THESE 
-FILES IN YOUR PROJECTS, YOU SHOULD CONTACT THEIR OWNER, MARAT FAYZULLIN.
+/*
 
-Copyright 2006-2011 - Ludovic Jacomme. All rights reserved.
+Copyright 2005-2011 - Ludovic Jacomme - All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are
 permitted provided that the following conditions are met:
@@ -29,3 +26,40 @@ The views and conclusions contained in the software and documentation are those 
 authors and should not be interpreted as representing official policies, either expressed
 or implied, of Ludovic Jacomme.
 
+*/
+
+# ifndef _PSP_MENU_H_
+# define _PSP_MENU_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+# define PSP_MENU_BORDER_COLOR     psp_sdl_rgb(0x80,0x80,0xF0)
+# define PSP_MENU_WARNING_COLOR    psp_sdl_rgb(0xFF,0x00,0x00)
+# define PSP_MENU_NOTE_COLOR       psp_sdl_rgb(0xFF,0xFF,0x00)
+# define PSP_MENU_BACKGROUND_COLOR psp_sdl_rgb(0x00,0x00,0x00)
+# define PSP_MENU_BLACK_COLOR      psp_sdl_rgb(0x00,0x00,0x00)
+# define PSP_MENU_AUTHOR_COLOR     psp_sdl_rgb(0x00,0x00,0xFF)
+# define PSP_MENU_BLUE_COLOR       psp_sdl_rgb(0x00,0x00,0xFF)
+# define PSP_MENU_GREEN_COLOR      psp_sdl_rgb(0x00,0xFF,0x00)
+# define PSP_MENU_RED_COLOR        psp_sdl_rgb(0xFF,0x00,0x00)
+
+# define PSP_MENU_TEXT_COLOR       psp_sdl_rgb(0x80,0x80,0x80)
+# define PSP_MENU_TEXT2_COLOR      psp_sdl_rgb(0xff,0xff,0xff)
+# define PSP_MENU_SEL_COLOR        psp_sdl_rgb(0x00,0xff,0xff)
+# define PSP_MENU_SEL2_COLOR       psp_sdl_rgb(0xFF,0x00,0x80)
+
+# define PSP_MENU_MIN_TIME         150000
+
+  typedef struct menu_item_t {
+    char *title;
+  } menu_item_t;
+
+
+   extern int psp_main_menu(void);
+#ifdef __cplusplus
+}
+#endif
+
+# endif

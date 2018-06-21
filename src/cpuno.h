@@ -1,9 +1,6 @@
-PLEASE, SEE EACH SOURCE FILE HEADER FOR THE OWNERSHIP AND LICENSE INFORMATION
-ON THIS SOURCE FILE. CERTAIN PARTS OF THIS SOFTWARE ARE PROPERTY OF MARAT
-FAYZULLIN AND ARE NOT COVERED BY THE FOLLOWING LICENSE.  IN ORDER TO USE THESE 
-FILES IN YOUR PROJECTS, YOU SHOULD CONTACT THEIR OWNER, MARAT FAYZULLIN.
+/*
 
-Copyright 2006-2011 - Ludovic Jacomme. All rights reserved.
+Copyright 2005-2011 - Ludovic Jacomme - All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are
 permitted provided that the following conditions are met:
@@ -29,3 +26,28 @@ The views and conclusions contained in the software and documentation are those 
 authors and should not be interpreted as representing official policies, either expressed
 or implied, of Ludovic Jacomme.
 
+*/
+
+#ifndef __CPUNO_H__
+#define __CPUNO_H__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+# define GP2X_DEF_CLOCK     500
+# define GP2X_DEF_EMU_CLOCK 500
+# define GP2X_MIN_CLOCK     60
+# define GP2X_MAX_CLOCK     800
+
+# define cpu_init() 
+# define cpu_deinit()
+
+# define cpu_get_clock()   0
+# define cpu_set_clock(N)
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

@@ -1,9 +1,6 @@
-PLEASE, SEE EACH SOURCE FILE HEADER FOR THE OWNERSHIP AND LICENSE INFORMATION
-ON THIS SOURCE FILE. CERTAIN PARTS OF THIS SOFTWARE ARE PROPERTY OF MARAT
-FAYZULLIN AND ARE NOT COVERED BY THE FOLLOWING LICENSE.  IN ORDER TO USE THESE 
-FILES IN YOUR PROJECTS, YOU SHOULD CONTACT THEIR OWNER, MARAT FAYZULLIN.
+/*
 
-Copyright 2006-2011 - Ludovic Jacomme. All rights reserved.
+Copyright 2005-2011 - Ludovic Jacomme - All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are
 permitted provided that the following conditions are met:
@@ -29,3 +26,43 @@ The views and conclusions contained in the software and documentation are those 
 authors and should not be interpreted as representing official policies, either expressed
 or implied, of Ludovic Jacomme.
 
+*/
+
+# ifndef _PSP_JOY_H_
+# define _PSP_JOY_H_
+
+# ifdef __cplusplus
+extern "C" {
+# endif
+
+# define JOY_TYPE_NONE          0
+# define JOY_TYPE_JOYSTICK      1
+# define JOY_TYPE_PADDLE        2
+# define JOY_TYPE_DUAL_PADDLE   3
+# define JOY_MAX_TYPE           3
+
+# define JOY_UP        0
+# define JOY_DOWN      1
+# define JOY_LEFT      2
+# define JOY_RIGHT     3
+# define JOY_FIRE      4
+# define JOY_PADDLE1P  5
+# define JOY_PADDLE1M  6
+# define JOY_PADDLE1F  7
+# define JOY_PADDLE2P  8
+# define JOY_PADDLE2M  9
+# define JOY_PADDLE2F 10
+
+# define JOY_ALL_BUTTONS 11
+
+  extern int psp_joy_mapping[ JOY_ALL_BUTTONS ];
+
+  extern int psp_joy_load_settings(char *kbd_filename);
+  extern int psp_joy_save_settings(char *kbd_filename);
+  extern void psp_joy_default_settings();
+
+# ifdef __cplusplus
+}
+# endif
+
+# endif

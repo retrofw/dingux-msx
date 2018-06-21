@@ -1,9 +1,6 @@
-PLEASE, SEE EACH SOURCE FILE HEADER FOR THE OWNERSHIP AND LICENSE INFORMATION
-ON THIS SOURCE FILE. CERTAIN PARTS OF THIS SOFTWARE ARE PROPERTY OF MARAT
-FAYZULLIN AND ARE NOT COVERED BY THE FOLLOWING LICENSE.  IN ORDER TO USE THESE 
-FILES IN YOUR PROJECTS, YOU SHOULD CONTACT THEIR OWNER, MARAT FAYZULLIN.
+/*
 
-Copyright 2006-2011 - Ludovic Jacomme. All rights reserved.
+Copyright 2005-2011 - Ludovic Jacomme - All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are
 permitted provided that the following conditions are met:
@@ -29,3 +26,60 @@ The views and conclusions contained in the software and documentation are those 
 authors and should not be interpreted as representing official policies, either expressed
 or implied, of Ludovic Jacomme.
 
+*/
+
+#ifndef __CPUGP2X_H__
+#define __CPUGP2X_H__
+
+# define GP2X_DEF_CLOCK      200
+# define GP2X_DEF_EMU_CLOCK  200
+# define GP2X_MIN_CLOCK      100
+# define GP2X_MAX_CLOCK      270
+
+/*Definicion de funciones*/
+
+void cpu_init(void);
+
+int cpu_deinit(void);
+
+void save_system_regs(void);
+
+void load_system_regs(void);
+
+unsigned cpu_get_clock(void);
+
+void cpu_set_clock(int psp_speed);
+
+unsigned get_freq_920_CLK();
+
+unsigned short get_920_Div();
+
+unsigned get_display_clock_div();
+
+void set_display_clock_div(unsigned div);
+
+void set_FCLK(unsigned MHZ);
+
+void set_DCLK_Div( unsigned short div );
+
+void set_920_Div(unsigned short div);
+
+void Disable_940(void);
+
+unsigned short Disable_Int_940(void);
+
+unsigned get_status_UCLK();
+
+unsigned get_status_ACLK();
+
+void set_status_UCLK(unsigned s);
+
+void set_status_ACLK(unsigned s);
+
+void set_display(int mode);
+
+
+/* Frecuencia de reloj de sistema */
+#define SYS_CLK_FREQ 7372800
+
+#endif
