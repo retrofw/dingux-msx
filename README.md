@@ -2,10 +2,12 @@
 
 ## Original Author of fMSX
 
+```
 fMSX-SDL port            by Vincent van Dam (2001).
 Original fMSX            by Marat Fayzullin (1994-2001).
 YM2413/PSG/SCC emulation by Mitsutaka Okazaki (2001).
 Y8950 emulation          by Tatsuyuki Satoh (1999/2000).
+```
 
 ## Author of the Dingoo/Dingux port version 
 
