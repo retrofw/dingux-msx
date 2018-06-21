@@ -41,17 +41,41 @@ MORE_CFLAGS = -DFMSX -DUNIX -DNARROW -DSOUND -DBPP16 -DSDL -DLSB_FIRST \
 -I. -I/opt/opendingux-toolchain/usr/include \
  -DMPU_JZ4740 -mips32 \
  -O3 -fsigned-char -ffast-math -fomit-frame-pointer -fno-strength-reduce \
- -DNO_STDIO_REDIRECT -DDINGUX_MODE  \
+ -DOPENDINGUX_MODE \
+ -DLINUX_MODE \
+ -DNO_STDIO_REDIRECT \
  -DMSX_VERSION=\"$(MSX_VERSION)\"
 
-CFLAGS = $(DEFAULT_CFLAGS) $(MORE_CFLAGS) 
-LDFLAGS = -s
 
-LIBS += \
+#MORE_CFLAGS = -DFMSX -DUNIX -DNARROW -DSOUND -DBPP16 -DSDL -DLSB_FIRST \
+#-I. -I/opt/opendingux-toolchain/usr/include \
+# -DMPU_JZ4740 -mips32 \
+# -O3 -fsigned-char -ffast-math -fomit-frame-pointer -fno-strength-reduce \
+# -DNO_STDIO_REDIRECT -DDINGUX_MODE  \
+# -DMSX_VERSION=\"$(MSX_VERSION)\"
+
+#LDFLAGS = -shared -s -fPIC 
+LDFLAGS =  -s -lm -lz `$(SDL_CONFIG) --libs`
+
+#LIBS += \
+#-B/opt/opendingux-toolchain/usr/lib \
+#-L/opt/opendingux-toolchain/usr/lib \
+#-lpng -lz -lm -lpthread  -ldl -fPIC 
+
+
+LIBS += -lSDL_image -lpng \
+-lpthread  -ldl \
 -B/opt/opendingux-toolchain/usr/lib \
--L/opt/opendingux-toolchain/usr/lib \
--lSDL_image \
--lpng -lz -lm -lpthread  -ldl
+-R/opt/opendingux-toolchain/usr/lib \
+-L/opt/opendingux-toolchain/usr/lib
+
+
+
+MORE_CFLAGS += -O2 -fomit-frame-pointer -ffunction-sections -ffast-math -fsingle-precision-constant -G0
+LDFLAGS     += -Wl,--gc-sections
+
+CFLAGS = $(DEFAULT_CFLAGS) $(MORE_CFLAGS) 
+
 
 
 #/opt/mipsel-linux-uclibc/usr/lib/libSDL_image.a \
