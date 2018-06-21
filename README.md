@@ -171,12 +171,12 @@ example you can edit a file with the .kbd extension and put it in the kbd
 directory.
 
 For the exact syntax of those mapping files, have a look on sample files already
-presents in the kbd directory (default.kbd etc ...).
+presents in the kbd directory (default.kbd etc...).
 
 After writting such keyboard mapping file, you can load them using the main menu
 inside the emulator.
 
-If the keyboard filename is the same as the rom filename (.zip etc ...)
+If the keyboard filename is the same as the rom filename (.zip etc...)
 then when you load this rom, the corresponding keyboard file is automatically 
 loaded !
 
@@ -201,10 +201,12 @@ when you start the game.
 
 The CHT file format is the following :
 
-    #
-    # Enable, Address, Value, Comment
-    #
-    1,36f,3,Cheat comment
+```
+#
+# Enable, Address, Value, Comment
+#
+1,36f,3,Cheat comment
+```
 
 Using the Cheat menu you can search for modified bytes in RAM between
 current time and the last time you saved the RAM. It might be very usefull to
@@ -250,31 +252,34 @@ Let's enjoy 1942 with infinite life !!
 You can modify several settings value in the settings menu of this emulator.
 The following parameters are available :
 
-    Sound enable       : enable or disable the sound
-    Music FM-PAC       : emulate specific FM-PAC hardware (slow)
-    Music Module       : emulate specific music hardware (slow)
-    Sound volume       : Boost sound volume
-    Video Mode         : NTSC or PAL video standard
-    Speed limiter      : limit the speed to a given fps value
-    Skip frame         : to skip frame and increase emulator speed
-    Display fps        : display real time fps value 
-    MSX version        : MSX version 1, 2 or 2+
-    MSX Ram size       : memory size of MSX
-    Render mode        : many render modes are available with different 
-                         geometry that should covered all games requirements
-    V-Sync             : vertical synchronisation (slow down the emulator)
-    Clock frequency    : Dingux clock frequency, by default the value is set to
-                         200Mhz, and should be enough for most of all games.
+```
+Sound enable       : enable or disable the sound
+Music FM-PAC       : emulate specific FM-PAC hardware (slow)
+Music Module       : emulate specific music hardware (slow)
+Sound volume       : Boost sound volume
+Video Mode         : NTSC or PAL video standard
+Speed limiter      : limit the speed to a given fps value
+Skip frame         : to skip frame and increase emulator speed
+Display fps        : display real time fps value 
+MSX version        : MSX version 1, 2 or 2+
+MSX Ram size       : memory size of MSX
+Render mode        : many render modes are available with different 
+                     geometry that should covered all games requirements
+V-Sync             : vertical synchronisation (slow down the emulator)
+Clock frequency    : Dingux clock frequency, by default the value is set to
+                     200Mhz, and should be enough for most of all games.
+```
 
 ## JOYSTICK SETTINGS
 
 You can modify several joystick settings value in the settings menu of this emulator.
 The following parameters are available :
 
-    Swap Analog/Cursor : swap key mapping between Dingux analog pad and Dingux digital pad
-    Auto fire period   : auto fire period
-    Auto fire mode     : auto fire mode active or not
-
+```
+Swap Analog/Cursor : swap key mapping between Dingux analog pad and Dingux digital pad
+Auto fire period   : auto fire period
+Auto fire mode     : auto fire mode active or not
+```
 
 ## COMPILATION
 
