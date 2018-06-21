@@ -38,6 +38,7 @@ For any comments or questions on this version, please visit
 http://zx81.zx81.free.fr, http://zx81.dcemu.co.uk or 
 http://www.gp32x.com/
 
+
 ## CONTROL
 
 ### - Virtual keyboard
@@ -156,6 +157,7 @@ the emulator window, the MSX should reboot and stard your disk automatically.
 You must eject any present rom before starting a disk, or only the 
 ROM will start instead of your disk image.
 
+
 ## COMMENTS
 
 You can write your own comments for games using the "Comment" menu.  The first
@@ -249,6 +251,7 @@ and you can save it using the "Save cheat" menu.
 
 Let's enjoy 1942 with infinite life !!
 
+
 ## SETTINGS
 
 You can modify several settings value in the settings menu of this emulator.
@@ -272,6 +275,7 @@ Clock frequency    : Dingux clock frequency, by default the value is set to
                      200Mhz, and should be enough for most of all games.
 ```
 
+
 ## JOYSTICK SETTINGS
 
 You can modify several joystick settings value in the settings menu of this emulator.
@@ -282,6 +286,7 @@ Swap Analog/Cursor : swap key mapping between Dingux analog pad and Dingux digit
 Auto fire period   : auto fire period
 Auto fire mode     : auto fire mode active or not
 ```
+
 
 ## COMPILATION
 
