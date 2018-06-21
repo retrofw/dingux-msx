@@ -1,18 +1,16 @@
 #
 # MSX port on RS-97
 #
-# Copyright (C) 2009 Ludovic Jacomme (ludovic.jacomme@gmail.com)
+# by pingflood; 2018
 #
-
 
 CHAINPREFIX=/opt/rs97-toolchain
 CROSS_COMPILE=$(CHAINPREFIX)/usr/bin/mipsel-linux-
 SYSROOT     := $(CHAINPREFIX)/usr/mipsel-buildroot-linux-uclibc/sysroot
 
-
 MSX_VERSION=1.1.0
 
-TARGET = dingux-msx
+TARGET = assets/dingux-msx
 SDL_CONFIG = $(SYSROOT)/usr/bin/sdl-config
 OBJS = gp2x_psp.o \
 cpudingux.o \
@@ -43,7 +41,6 @@ CC = $(CROSS_COMPILE)gcc
 CXX = $(CROSS_COMPILE)g++
 STRIP = $(CROSS_COMPILE)strip
 
-
 DEFAULT_CFLAGS = $(shell $(SDL_CONFIG) --cflags)
 
 MORE_CFLAGS = -DFMSX -DUNIX -DNARROW -DSOUND -DBPP16 -DSDL -DLSB_FIRST \
@@ -55,22 +52,7 @@ MORE_CFLAGS = -DFMSX -DUNIX -DNARROW -DSOUND -DBPP16 -DSDL -DLSB_FIRST \
  -DNO_STDIO_REDIRECT \
  -DMSX_VERSION=\"$(MSX_VERSION)\"
 
-
-#MORE_CFLAGS = -DFMSX -DUNIX -DNARROW -DSOUND -DBPP16 -DSDL -DLSB_FIRST \
-#-I. -I/opt/opendingux-toolchain/usr/include \
-# -DMPU_JZ4740 -mips32 \
-# -O3 -fsigned-char -ffast-math -fomit-frame-pointer -fno-strength-reduce \
-# -DNO_STDIO_REDIRECT -DDINGUX_MODE  \
-# -DMSX_VERSION=\"$(MSX_VERSION)\"
-
-#LDFLAGS = -shared -s -fPIC 
 LDFLAGS =  -s -lm -lz `$(SDL_CONFIG) --libs`
-
-#LIBS += \
-#-B/opt/opendingux-toolchain/usr/lib \
-#-L/opt/opendingux-toolchain/usr/lib \
-#-lpng -lz -lm -lpthread  -ldl -fPIC 
-
 
 LIBS += -lSDL_image -lpng \
 -lpthread  -ldl \
@@ -78,19 +60,10 @@ LIBS += -lSDL_image -lpng \
 -R$(SYSROOT)/usr/lib \
 -L$(SYSROOT)/usr/lib
 
-
-
 MORE_CFLAGS += -O2 -fomit-frame-pointer -ffunction-sections -ffast-math -fsingle-precision-constant -G0
 LDFLAGS     += -Wl,--gc-sections
 
 CFLAGS = $(DEFAULT_CFLAGS) $(MORE_CFLAGS) 
-
-
-
-#/opt/mipsel-linux-uclibc/usr/lib/libSDL_image.a \
-#/opt/mipsel-linux-uclibc/usr/lib/libSDL.a \
-
-
 
 .c.o:
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -98,8 +71,8 @@ CFLAGS = $(DEFAULT_CFLAGS) $(MORE_CFLAGS)
 $(TARGET): $(OBJS)
 	$(CC) $(LDFLAGS) $(CFLAGS) $(OBJS) $(LIBS) -o $(TARGET) && $(STRIP) $(TARGET)
 
-install: $(TARGET)
-	cp $< /media/dingux/local/emulators/dingux-msx/
+#install: $(TARGET)
+#	cp $< /media/dingux/local/emulators/dingux-msx/
 
 clean:
 	rm -f $(OBJS) $(TARGET)
