@@ -3258,7 +3258,7 @@ msx_load_rom(char *FileName, int zip_format)
 			return -1;
 		}
 		
-		int16_t error = UNZ_OK;
+		error = UNZ_OK;
 		do    
 		{
 			error = unzReadCurrentFile( zipfile, read_buffer, READ_SIZE );
