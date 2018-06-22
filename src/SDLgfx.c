@@ -28,6 +28,8 @@
 #include "SDLfnt.h"
 #include "SDLfilter.h"
 
+int loaded_msx = 0;
+
 /** Standard #includes ***************************************/
 #ifdef UNIX
 #include <signal.h>
@@ -162,60 +164,86 @@ msx_change_render_mode(int new_render_mode)
   MSX.msx_render_mode = new_render_mode;
 }
 
+extern char ZipFile[256];
+
 /** InitMachine() ********************************************/
 /** Allocate resources needed by Unix/X-dependent code.     **/
 /*************************************************************/
-int InitMachine(void)
+int InitMachine(int argc, char* argv[])
 {
-  int J,I;
+	int J,I;
+	char * pch;
+	Verbose=0;
 
-  Verbose=0;
+	msx_default_settings();
+	psp_joy_default_settings();
+	psp_kbd_default_settings();
 
-  msx_default_settings();
-  psp_joy_default_settings();
-  psp_kbd_default_settings();
+	/* Default disk images */
+	if (argc > 1)
+	{
+		Disks[0][1]=Disks[1][1]=0;
+		if (strstr (argv[1],".rom") != NULL || strstr (argv[1],".mx1") != NULL || strstr (argv[1],".mx2") != NULL) 
+		{
+			if (Verbose) printf("File is a raw ROM file\n");
+			snprintf(CartA, sizeof(CartA), "%s", argv[1]);
+			loaded_msx = 1;
+		}
+		if ( strstr (argv[1],".zip") != NULL) 
+		{
+			if (Verbose) printf("File is a ROM file (ZIP file)\n");
+			snprintf(ZipFile, sizeof(ZipFile), "%s", argv[1]);
+			loaded_msx = 3;
+		}
+		else if (strstr (argv[1],".dsk") != NULL) 
+		{
+			if (Verbose) printf("File is a DSK file\n");
+			snprintf(DiskA, sizeof(DiskA), "%s", argv[1]);
+			loaded_msx = 2;
+		}
+	}
 
-  /* Default disk images */
-  Disks[0][1]=Disks[1][1]=0;
-  Disks[0][0]=DiskA;
-  Disks[1][0]=DiskB;
+	Disks[0][1]=Disks[1][1]=0;
+	Disks[0][0]=DiskA;
+	Disks[1][0]=DiskB;
+		
+	/* Reset all variables */
+	memset(XKeyMap,0xFF,sizeof(XKeyMap));
+	JoyState=0x00;
+	CurDisk[0]=CurDisk[1]=0;
 
-  /* Reset all variables */
-  memset(XKeyMap,0xFF,sizeof(XKeyMap));
-  JoyState=0x00;
-  CurDisk[0]=CurDisk[1]=0;
-
-  /* Init image buffer */
-  //LUDO: XBuf = (ushort *)blit_surface->pixels;
+	/* Init image buffer */
+	//LUDO: XBuf = (ushort *)blit_surface->pixels;
   
-  /* Reset the palette */
-  for(J=0;J<16;J++) XPal[J]=0;
-  XPal0=0;
+	/* Reset the palette */
+	for(J=0;J<16;J++) XPal[J]=0;
+		XPal0=0;
   
-  /* Set SCREEN8 colors */
-  for(J=0;J<64;J++) {
-    I=(J&0x03)+(J&0x0C)*16+(J&0x30)/2;
-    XPal[J+16]=SDL_MapRGB(back_surface->format,
+	/* Set SCREEN8 colors */
+	for(J=0;J<64;J++) 
+	{
+		I=(J&0x03)+(J&0x0C)*16+(J&0x30)/2;
+			XPal[J+16]=SDL_MapRGB(back_surface->format,
 			  (J>>4)*255/3,((J>>2)&0x03)*255/3,(J&0x03)*255/3);
-    BPal[I]=BPal[I|0x04]=BPal[I|0x20]=BPal[I|0x24]=XPal[J+16];
-  }
+		BPal[I]=BPal[I|0x04]=BPal[I|0x20]=BPal[I|0x24]=XPal[J+16];
+	}
 
-  /* Initialize sound */   
-  InitSound(UseSound,Verbose);
+	/* Initialize sound */   
+	InitSound(UseSound,Verbose);
   
-  /* clear on-back_surface message */
-  update_save_name("");
+	/* clear on-back_surface message */
+	update_save_name("");
 
-  msx_load_settings();
-  msx_kbd_load();
-  msx_joy_load();
-  msx_load_cheat();
+	msx_load_settings();
+	msx_kbd_load();
+	msx_joy_load();
+	msx_load_cheat();
 
-  myPowerSetClockFrequency(MSX.psp_cpu_clock);
+	myPowerSetClockFrequency(MSX.psp_cpu_clock);
 
-  InitMSX();
+	InitMSX();
 
-  return(1);
+	return(1);
 }
 
 /** TrashMachine() *******************************************/

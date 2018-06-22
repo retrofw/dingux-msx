@@ -28,8 +28,8 @@ psp_menu_kbd.o \
 psp_menu_cheat.o \
 psp_menu_list.o \
 psp_editor.o \
-miniunz.o \
 unzip.o \
+ioapi.o \
 psp_fmgr.o
 
 CC=/opt/opendingux-toolchain/usr/bin/mipsel-linux-gcc

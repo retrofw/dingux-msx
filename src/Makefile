@@ -4,14 +4,10 @@
 # by pingflood; 2018
 #
 
-CHAINPREFIX=/opt/rs97-toolchain
-CROSS_COMPILE=$(CHAINPREFIX)/usr/bin/mipsel-linux-
-SYSROOT     := $(CHAINPREFIX)/usr/mipsel-buildroot-linux-uclibc/sysroot
-
 MSX_VERSION=1.1.0
 
 TARGET = assets/dingux-msx
-SDL_CONFIG = $(SYSROOT)/usr/bin/sdl-config
+SDL_CONFIG = sr/bin/sdl-config
 OBJS = gp2x_psp.o \
 cpudingux.o \
 fMSX.o MSX.o Patch.o Sound.o Disk.o \
@@ -37,31 +33,23 @@ unzip.o \
 ioapi.o \
 psp_fmgr.o
 
-CC = $(CROSS_COMPILE)gcc
-CXX = $(CROSS_COMPILE)g++
-STRIP = $(CROSS_COMPILE)strip
+CC = gcc
+CXX = g++
 
-DEFAULT_CFLAGS = $(shell $(SDL_CONFIG) --cflags)
-
-MORE_CFLAGS = -DFMSX -DUNIX -DNARROW -DSOUND -DBPP16 -DSDL -DLSB_FIRST \
+MORE_CFLAGS = -DFMSX -DUNIX -DNARROW -DSOUND -DBPP16 -DSDL -DLSB_FIRST -I/usr/include/SDL \
 -I. -I$(CHAINPREFIX)/usr/include/ \
- -DMPU_JZ4740 -mips32 \
  -O3 -fsigned-char -ffast-math -fomit-frame-pointer -fno-strength-reduce \
  -DDINGUX_MODE \
  -DLINUX_MODE \
  -DNO_STDIO_REDIRECT \
  -DMSX_VERSION=\"$(MSX_VERSION)\"
 
-LDFLAGS =  -s -lm -lz `$(SDL_CONFIG) --libs`
+LDFLAGS =   -lm -lz -lSDL
 
-LIBS += -lSDL_image -lpng \
--lpthread  -ldl \
--B$(SYSROOT)/usr/lib \
--R$(SYSROOT)/usr/lib \
--L$(SYSROOT)/usr/lib
+LIBS += -lSDL_image -lpng -lpthread  -ldl -lSDL
 
-MORE_CFLAGS += -O2 -fomit-frame-pointer -ffunction-sections -ffast-math -fsingle-precision-constant -G0
-LDFLAGS     += -Wl,--gc-sections
+MORE_CFLAGS += -O0 -g -DINLINE=inline
+LDFLAGS     +=
 
 CFLAGS = $(DEFAULT_CFLAGS) $(MORE_CFLAGS) 
 
@@ -69,7 +57,7 @@ CFLAGS = $(DEFAULT_CFLAGS) $(MORE_CFLAGS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(TARGET): $(OBJS)
-	$(CC) $(LDFLAGS) $(CFLAGS) $(OBJS) $(LIBS) -o $(TARGET) && $(STRIP) $(TARGET)
+	$(CC) $(LDFLAGS) $(CFLAGS) $(OBJS) $(LIBS) -o $(TARGET)
 
 #install: $(TARGET)
 #	cp $< /media/dingux/local/emulators/dingux-msx/
