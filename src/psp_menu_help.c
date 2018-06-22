@@ -69,7 +69,7 @@ psp_initialize_help(void)
   /* Already done ? */
   if (psp_help_size > 0) return; 
 
-  strcpy(FileName, "./help.txt");
+  strcpy(FileName, "./dingux-msx.man.txt");
   FileDesc = fopen(FileName, "r");
 
   psp_help_current = 0;
