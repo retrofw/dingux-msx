@@ -23,7 +23,8 @@
 #include <fcntl.h>
 #include <time.h>
 
-#include <zlib.h>
+
+#include "unzip.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "psp_fmgr.h"
@@ -114,6 +115,8 @@ char CartB[256]      = "cartb.rom";    /* Cartridge B ROM file   */
 /** Disk images used by fMSX *********************************/
 char DiskA[256]      = "drivea.dsk";   /* Drive A disk image  */
 char DiskB[256]      = "driveb.dsk";   /* Drive B disk image  */
+
+char ZipFile[256];    /* Cartridge A ROM file   */
 
 /** Soundtrack logging ***************************************/
 char *SndName    = "log.mid";      /* Sound log file         */
@@ -3204,60 +3207,99 @@ msx_eject_rom(void)
 int
 msx_load_rom(char *FileName, int zip_format)
 {
-  char   SaveName[MAX_PATH+1];
-  char   TmpFileName[MAX_PATH + 1];
-  FILE*  TmpFile;
-  char*  ExtractName;
-  char*  scan;
-  char*  zip_buffer;
-  int    format;
-  int    error;
-  size_t unzipped_size;
+	#define READ_SIZE 8192
+	char   SaveName[MAX_PATH+1];
+	int    error;
+	char* scan;
+	size_t unzipped_size;
+	int8_t read_buffer[READ_SIZE];
+	int8_t filename[512];
+	error = 1;
 
-  error = 1;
+	if (zip_format) 
+	{
+		strncpy(SaveName,FileName,MAX_PATH);
+		scan = strrchr(SaveName,'.');
+		if (scan) *scan = '\0';
+		update_save_name(SaveName);
+		
+		unzFile *zipfile = unzOpen(FileName);
+		unz_global_info global_info;
+		if ( unzGetGlobalInfo( zipfile, &global_info ) != UNZ_OK )
+		{
+			printf( "Could not read file global info\n" );
+			unzClose( zipfile );
+			return -1;
+		}
 
-  if (zip_format) {
-
-    ExtractName = find_possible_filename_in_zip( FileName, "rom.mx1.mx2");
-
-    if (ExtractName) {
-
-      strncpy(SaveName, FileName, MAX_PATH);
-      scan = strrchr(SaveName,'.');
-      if (scan) *scan = '\0';
-      update_save_name(SaveName);
-
-      zip_buffer = extract_file_in_memory( FileName, ExtractName, &unzipped_size);
-
-      if (zip_buffer) {
-        strcpy(TmpFileName, MSX.msx_home_dir);
-        strcat(TmpFileName, "/unzip.tmp");
-        if (TmpFile = fopen( TmpFileName, "wb")) {
-          fwrite(zip_buffer, unzipped_size, 1, TmpFile);
-          fclose(TmpFile);
-          error = loc_load_rom(TmpFileName);
-          remove(TmpFileName);
+        /* Get info about current file. */
+        unz_file_info file_info;
+        if ( unzGetCurrentFileInfo( zipfile, &file_info, filename, 512, NULL, 0, NULL, 0 ) != UNZ_OK )
+        {
+            printf( "Could not read file info\n" );
+            unzClose( zipfile );
+            return -1;
         }
-        free(zip_buffer);
-      }
-    }
+        
+		/* Entry is a file, so extract it. */
+		if ( unzOpenCurrentFile( zipfile ) != UNZ_OK )
+		{
+			printf( "Could not open file\n" );
+			unzClose( zipfile );
+			return -1;
+		}
+		
+		FILE *out = fopen("romtmp.rom", "wb" );
+		if ( out == NULL )
+		{
+			printf( "could not open destination file\n" );
+			unzCloseCurrentFile( zipfile );
+			unzClose( zipfile );
+			return -1;
+		}
+		
+		int16_t error = UNZ_OK;
+		do    
+		{
+			error = unzReadCurrentFile( zipfile, read_buffer, READ_SIZE );
+			if ( error < 0 )
+			{
+				printf( "Error %d\n", error );
+				unzCloseCurrentFile( zipfile );
+				unzClose( zipfile );
+				return -1;
+			}
+			if ( error > 0 )
+			{
+				/* Write data to file. */
+				fwrite( read_buffer, error, 1, out );
+			}
+		} while ( error > 0 );
 
-  } else {
-    strncpy(SaveName,FileName,MAX_PATH);
-    scan = strrchr(SaveName,'.');
-    if (scan) *scan = '\0';
-    update_save_name(SaveName);
-    error = loc_load_rom(FileName);
-  }
+        fclose( out );
+        unzCloseCurrentFile( zipfile );
+		snprintf(CartA, sizeof(CartA), "./%s", "romtmp.rom");
+		error = loc_load_rom(CartA);
+		remove(CartA);
+	} 
+	else 
+	{
+		strncpy(SaveName,FileName,MAX_PATH);
+		scan = strrchr(SaveName,'.');
+		if (scan) *scan = '\0';
+		update_save_name(SaveName);
+		error = loc_load_rom(FileName);
+	}
 
-  if (! error ) {
-    msx_kbd_load();
-    msx_joy_load();
-    msx_load_cheat();
-    msx_load_settings();
-  }
+	if (! error ) 
+	{
+		msx_kbd_load();
+		msx_joy_load();
+		msx_load_cheat();
+		msx_load_settings();
+	}
 
-  return error;
+	return error;
 }
 
 int

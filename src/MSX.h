@@ -118,6 +118,7 @@ extern char CartA[256];                   /* Cartridge A ROM file*/
 extern char CartB[256];                   /* Cartridge B ROM file*/
 extern char DiskA[256];                   /* Drive A disk image  */
 extern char DiskB[256];                   /* Drive B disk image  */
+extern char ZipFile[256];                   /* Cartridge A ROM file*/
 extern char *SndName;                 /* Soundtrack log file */
 extern char *PrnName;                 /* Printer redir. file */
 extern char *CasName;                 /* Tape image file     */
@@ -173,7 +174,7 @@ byte ChangeDisk(byte ID,char *Name);
 /** InitMachine() ********************************************/
 /** Allocate resources needed by the machine-dependent code.**/
 /************************************ TO BE WRITTEN BY USER **/
-int InitMachine(void);
+int InitMachine(int argc, char* argv[]);
 
 /** TrashMachine() *******************************************/
 /** Deallocate all resources taken by InitMachine().        **/

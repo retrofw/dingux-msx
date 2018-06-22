@@ -471,169 +471,195 @@ psp_main_menu_editor()
   psp_editor_menu( TmpFileName );
 }
 
+//Gameblabla
+extern int loaded_msx;
+extern char ZipFile[256];
+
 int 
 psp_main_menu(void)
 {
-  gp2xCtrlData c;
-  long        new_pad;
-  long        old_pad;
-  int         last_time;
-  int         end_menu;
+	gp2xCtrlData c;
+	long        new_pad;
+	long        old_pad;
+	int         last_time;
+	int         end_menu;
+	int error;
 
-  audio_pause();
+	audio_pause();
 
-  msx_save_back_to_blit();
+	msx_save_back_to_blit();
 
-  psp_kbd_wait_no_button();
+	psp_kbd_wait_no_button();
 
-  old_pad   = 0;
-  last_time = 0;
-  end_menu  = 0;
+	old_pad   = 0;
+	last_time = 0;
+	end_menu  = 0;
+	
+	error = 0;
+  
+	switch (loaded_msx)
+	{
+		case 1:
+			/* For some reasons, not setting ZIP support to 1 even for uncompressed roms
+			does not work ?
+			*/
+			error = 1;
+			loaded_msx = 0;
+		break;
+		// It's a Disk image
+		case 2:
+			error = ChangeDisk(0, DiskA);
+			loaded_msx = 0;
+		break;
+		case 3:
+			error = msx_load_rom(ZipFile, 1);
+			loaded_msx = 0;
+		break;
+	}
 
-  while (! end_menu)
-  {
-    psp_display_screen_menu();
-    psp_sdl_flip();
+	if (error == 1) end_menu = 1;
+	
+	while (! end_menu)
+	{
+		psp_display_screen_menu();
+		psp_sdl_flip();
+		
+		end_menu = 0;
 
-    while (1)
-    {
-      gp2xCtrlReadBufferPositive(&c, 1);
-      c.Buttons &= PSP_ALL_BUTTON_MASK;
+		while (1)
+		{
+			gp2xCtrlReadBufferPositive(&c, 1);
+			c.Buttons &= PSP_ALL_BUTTON_MASK;
+			if (c.Buttons) break;
+		}
 
-      if (c.Buttons) break;
-    }
+		new_pad = c.Buttons;
 
-    new_pad = c.Buttons;
+		if ((old_pad != new_pad) || ((c.TimeStamp - last_time) > PSP_MENU_MIN_TIME)) {
+		  last_time = c.TimeStamp;
+		  old_pad = new_pad;
 
-    if ((old_pad != new_pad) || ((c.TimeStamp - last_time) > PSP_MENU_MIN_TIME)) {
-      last_time = c.TimeStamp;
-      old_pad = new_pad;
+		} else continue;
 
-    } else continue;
+		if ((c.Buttons & GP2X_CTRL_LTRIGGER) == GP2X_CTRL_LTRIGGER) {
+		  psp_settings_menu();
+		  old_pad = new_pad = 0;
+		} else
+		if ((c.Buttons & GP2X_CTRL_RTRIGGER) == GP2X_CTRL_RTRIGGER) {
+		  psp_main_menu_reset();
+		  end_menu = 1;
+		} else
+		if ((new_pad == GP2X_CTRL_LEFT ) || 
+			(new_pad == GP2X_CTRL_RIGHT) ||
+			(new_pad == GP2X_CTRL_CROSS) || 
+			(new_pad == GP2X_CTRL_CIRCLE))
+		{
+		  int step = 0;
 
-    if ((c.Buttons & GP2X_CTRL_LTRIGGER) == GP2X_CTRL_LTRIGGER) {
-      psp_settings_menu();
-      old_pad = new_pad = 0;
-    } else
-    if ((c.Buttons & GP2X_CTRL_RTRIGGER) == GP2X_CTRL_RTRIGGER) {
-      psp_main_menu_reset();
-      end_menu = 1;
-    } else
-    if ((new_pad == GP2X_CTRL_LEFT ) || 
-        (new_pad == GP2X_CTRL_RIGHT) ||
-        (new_pad == GP2X_CTRL_CROSS) || 
-        (new_pad == GP2X_CTRL_CIRCLE))
-    {
-      int step = 0;
+		  if (new_pad & GP2X_CTRL_RIGHT) {
+			step = 1;
+		  } else
+		  if (new_pad & GP2X_CTRL_LEFT) {
+			step = -1;
+		  }
 
-      if (new_pad & GP2X_CTRL_RIGHT) {
-        step = 1;
-      } else
-      if (new_pad & GP2X_CTRL_LEFT) {
-        step = -1;
-      }
+		  switch (cur_menu_id ) 
+		  {
+			case MENU_LOAD_SLOT : if (step) psp_main_menu_cur_slot(step);
+								  else if (psp_main_menu_load_slot()) end_menu = 1;
+			break;
+			case MENU_SAVE_SLOT : if (step) psp_main_menu_cur_slot(step);
+								  else      psp_main_menu_save_slot();
+			break;
+			case MENU_DEL_SLOT  : if (step) psp_main_menu_cur_slot(step);
+								  else      psp_main_menu_del_slot();
+			break;
 
-      switch (cur_menu_id ) 
-      {
-        case MENU_LOAD_SLOT : if (step) psp_main_menu_cur_slot(step);
-                              else if (psp_main_menu_load_slot()) end_menu = 1;
-        break;
-        case MENU_SAVE_SLOT : if (step) psp_main_menu_cur_slot(step);
-                              else      psp_main_menu_save_slot();
-        break;
-        case MENU_DEL_SLOT  : if (step) psp_main_menu_cur_slot(step);
-                              else      psp_main_menu_del_slot();
-        break;
+			case MENU_LOAD_ROM   : if (psp_main_menu_load(FMGR_FORMAT_ROM, 0)) end_menu = 1;
+								   old_pad = new_pad = 0;
+			break;              
+			case MENU_LOAD_DISK0 : if (psp_main_menu_load(FMGR_FORMAT_DISK, 0)) end_menu = 1;
+								   old_pad = new_pad = 0;
+			break;              
 
-        case MENU_LOAD_ROM   : if (psp_main_menu_load(FMGR_FORMAT_ROM, 0)) end_menu = 1;
-                               old_pad = new_pad = 0;
-        break;              
-        case MENU_LOAD_DISK0 : if (psp_main_menu_load(FMGR_FORMAT_DISK, 0)) end_menu = 1;
-                               old_pad = new_pad = 0;
-        break;              
+			case MENU_LOAD_DISK1 : if (psp_main_menu_load(FMGR_FORMAT_DISK, 1)) end_menu = 1;
+								   old_pad = new_pad = 0;
+			break;              
 
-        case MENU_LOAD_DISK1 : if (psp_main_menu_load(FMGR_FORMAT_DISK, 1)) end_menu = 1;
-                               old_pad = new_pad = 0;
-        break;              
+			case MENU_EDITOR    : psp_main_menu_editor();
+								  old_pad = new_pad = 0;
+			break;
 
-        case MENU_EDITOR    : psp_main_menu_editor();
-                              old_pad = new_pad = 0;
-        break;
+			case MENU_CHEATS    : psp_cheat_menu();
+								  old_pad = new_pad = 0;
+			break;              
 
-        case MENU_CHEATS    : psp_cheat_menu();
-                              old_pad = new_pad = 0;
-        break;              
+			case MENU_KEYBOARD   : psp_keyboard_menu();
+								   old_pad = new_pad = 0;
+			break;
+			case MENU_JOYSTICK   : psp_joystick_menu();
+								   old_pad = new_pad = 0;
+			break;
+			case MENU_SETTINGS   : psp_settings_menu();
+								   old_pad = new_pad = 0;
+			break;
 
-        case MENU_KEYBOARD   : psp_keyboard_menu();
-                               old_pad = new_pad = 0;
-        break;
-        case MENU_JOYSTICK   : psp_joystick_menu();
-                               old_pad = new_pad = 0;
-        break;
-        case MENU_SETTINGS   : psp_settings_menu();
-                               old_pad = new_pad = 0;
-        break;
+			case MENU_EJECT_ROM  : psp_main_menu_eject_rom();
+								   old_pad = new_pad = 0;
+			break;
 
-        case MENU_EJECT_ROM  : psp_main_menu_eject_rom();
-                               old_pad = new_pad = 0;
-        break;
+			case MENU_SCREENSHOT : psp_main_menu_screenshot();
+								   end_menu = 1;
+			break;              
+			case MENU_VOLUME     : psp_main_menu_volume(step);
+								   old_pad = new_pad = 0;
+			break;              
 
-        case MENU_SCREENSHOT : psp_main_menu_screenshot();
-                               end_menu = 1;
-        break;              
-        case MENU_VOLUME     : psp_main_menu_volume(step);
-                               old_pad = new_pad = 0;
-        break;              
+			case MENU_RESET     : psp_main_menu_reset();
+								  end_menu = 1;
+			break;
 
-        case MENU_RESET     : psp_main_menu_reset();
-                              end_menu = 1;
-        break;
+			case MENU_BACK      : end_menu = 1;
+			break;
 
-        case MENU_BACK      : end_menu = 1;
-        break;
+			case MENU_EXIT      : psp_main_menu_exit();
+			break;
 
-        case MENU_EXIT      : psp_main_menu_exit();
-        break;
+			case MENU_HELP      : psp_help_menu();
+								  old_pad = new_pad = 0;
+			break;              
+		  }
 
-        case MENU_HELP      : psp_help_menu();
-                              old_pad = new_pad = 0;
-        break;              
-      }
+		} else
+		if(new_pad & GP2X_CTRL_UP) {
 
-    } else
-    if(new_pad & GP2X_CTRL_UP) {
+		  if (cur_menu_id > 0) cur_menu_id--;
+		  else                 cur_menu_id = MAX_MENU_ITEM-1;
 
-      if (cur_menu_id > 0) cur_menu_id--;
-      else                 cur_menu_id = MAX_MENU_ITEM-1;
+		} else
+		if(new_pad & GP2X_CTRL_DOWN) {
 
-    } else
-    if(new_pad & GP2X_CTRL_DOWN) {
+		  if (cur_menu_id < (MAX_MENU_ITEM-1)) cur_menu_id++;
+		  else                                 cur_menu_id = 0;
 
-      if (cur_menu_id < (MAX_MENU_ITEM-1)) cur_menu_id++;
-      else                                 cur_menu_id = 0;
-
-    } else  
-    if(new_pad & GP2X_CTRL_SQUARE) {
-      /* Cancel */
-      end_menu = -1;
-    } else 
-    if(new_pad & GP2X_CTRL_SELECT) {
-      /* Back to MSX */
-      end_menu = 1;
-    }
+		} else  
+		if(new_pad & GP2X_CTRL_SQUARE) {
+		  end_menu = -1;
+		} else 
+		if(new_pad & GP2X_CTRL_SELECT) {
+		  end_menu = 1;
+		}
   }
- 
-  psp_kbd_wait_no_button();
 
-  psp_sdl_clear_screen( PSP_MENU_BLACK_COLOR );
-  psp_sdl_flip();
-  psp_sdl_clear_screen( PSP_MENU_BLACK_COLOR );
-  psp_sdl_flip();
+	psp_kbd_wait_no_button();
 
-  psp_sdl_clear_blit(0);
-
-  audio_resume();
-
-  return 1;
+	psp_sdl_clear_screen( PSP_MENU_BLACK_COLOR );
+	psp_sdl_flip();
+	psp_sdl_clear_screen( PSP_MENU_BLACK_COLOR );
+	psp_sdl_flip();
+	psp_sdl_clear_blit(0);
+	audio_resume();
+	
+	return 1;
 }
 
