@@ -64,8 +64,8 @@ extern SDL_Surface *back_surface;
 # define MENU_SET_VIEW_FPS      7
 # define MENU_SET_MSX_VERSION   8
 # define MENU_SET_MSX_RAM_PAGES 9
-// # define MENU_SET_RENDER       10
-// # define MENU_SET_CLOCK        11
+# define MENU_SET_RENDER       10
+# define MENU_SET_CLOCK        11
 
 # define MENU_SET_LOAD         12
 # define MENU_SET_SAVE         13
