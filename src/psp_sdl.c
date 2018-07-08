@@ -392,11 +392,12 @@ psp_sdl_blit_splash()
 void
 psp_sdl_blit_help()
 {
-  if (! help_surface) {
-    help_surface = IMG_Load("./help.png");
-  }
-  back2_surface = help_surface;
-	SDL_BlitSurface(back2_surface, NULL, back_surface, NULL);
+  psp_sdl_blit_background();
+ //  if (! help_surface) {
+ //    help_surface = IMG_Load("./help.png");
+ //  }
+ //  back2_surface = help_surface;
+	// SDL_BlitSurface(back2_surface, NULL, back_surface, NULL);
 }
 
 void
