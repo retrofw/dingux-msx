@@ -64,8 +64,8 @@ extern SDL_Surface *back_surface;
 # define MENU_SET_VIEW_FPS      7
 # define MENU_SET_MSX_VERSION   8
 # define MENU_SET_MSX_RAM_PAGES 9
-# define MENU_SET_RENDER       10
-# define MENU_SET_CLOCK        11
+// # define MENU_SET_RENDER       10
+// # define MENU_SET_CLOCK        11
 
 # define MENU_SET_LOAD         12
 # define MENU_SET_SAVE         13
@@ -87,8 +87,8 @@ extern SDL_Surface *back_surface;
     { "Display fps        :"},
     { "MSX version        :"},
     { "MSX ram size       :"},
-    { "Render mode        :"},
-    { "Clock frequency    :"},
+    // { "Render mode        :"},
+    // { "Clock frequency    :"},
     { "Load settings"       },
     { "Save settings"       },
     { "Reset settings"      },
@@ -294,6 +294,7 @@ psp_settings_menu_volume(int step)
 static void
 psp_settings_menu_render(int step)
 {
+  msx_render_mode = MSX_RENDER_FAST; return;
   if (step > 0) {
     if (msx_render_mode < MSX_LAST_RENDER) msx_render_mode++;
     else                                   msx_render_mode = 0;
