@@ -37,12 +37,14 @@ extern int   SndBufSize; /* Size of audio buffer (#ifdef SDL)   */
 /** It parses command line arguments, sets emulation        **/
 /** parameters, and passes control to the emulation itself. **/
 /*************************************************************/
-int SDL_main(int argc,char *argv[])
+int 
+SDL_main(int argc,char *argv[])
 {
   memset(&MSX, 0, sizeof(MSX_t));
   strcpy(MSX.msx_home_dir,".");
 
   psp_sdl_init();
+
   if(!InitMachine(argc,argv)) {
     return(1);
   }

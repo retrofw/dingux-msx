@@ -19,16 +19,18 @@ typedef unsigned int   u32;
 
 //LUDO:
 # define MSX_RENDER_FAST       0
-# define MSX_RENDER_NORMAL     1
-# define MSX_RENDER_FIT        2
+# define MSX_RENDER_ZOOMED     1
+# define MSX_RENDER_FULLSCREEN 2
 # define MSX_LAST_RENDER       2
+# define MSX_RENDER_NORMAL     3
+# define MSX_RENDER_FIT        4
 
 # define MAX_PATH   256
 # define MSX_MAX_SAVE_STATE 5
 
 # define MSX_WIDTH    272
 # define MSX_HEIGHT   228
-# define SCR_WIDTH    MSX_WIDTH 
+# define SCR_WIDTH    MSX_WIDTH
 # define SCR_HEIGHT   MSX_HEIGHT
 # define SNAP_WIDTH   (MSX_WIDTH/2)
 # define SNAP_HEIGHT  (MSX_HEIGHT/2)
@@ -44,7 +46,7 @@ typedef unsigned int   u32;
 #define MSX_CHEAT_COMMENT_SIZE 25
 
 #define MSX_MAX_RAM_PAGE  32
-  
+
   typedef struct MSX_cheat_t {
     unsigned char  type;
     unsigned short addr;
@@ -62,7 +64,7 @@ typedef unsigned int   u32;
   } MSX_save_t;
 
   typedef struct MSX_t {
- 
+
     MSX_save_t msx_save_state[MSX_MAX_SAVE_STATE];
     MSX_cheat_t msx_cheat[MSX_MAX_CHEAT];
 
@@ -74,22 +76,26 @@ typedef unsigned int   u32;
     int        msx_ram_pages;
     int        msx_ntsc;
     int        psp_screenshot_id;
+# if !defined(CAANOO_MODE)
     int        psp_cpu_clock;
+    int        msx_current_clock;
+# endif
     int        psp_reverse_analog;
     int        psp_sound_volume;
     int        msx_snd_enable;
     int        msx_view_fps;
     int        msx_current_fps;
-    int        msx_current_clock;
     int        msx_render_mode;
     int        msx_vsync;
     int        psp_skip_max_frame;
     int        psp_skip_cur_frame;
     int        msx_use_2413;
     int        msx_use_8950;
+    int        msx_uperiod;
     int        msx_auto_fire_period;
     int        msx_auto_fire;
     int        msx_auto_fire_pressed;
+    int        msx_megarom_type;
 
   } MSX_t;
 

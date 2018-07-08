@@ -35,6 +35,7 @@ psp_menu_list.o \
 psp_editor.o \
 unzip.o \
 ioapi.o \
+sha1.o \
 psp_fmgr.o
 
 CC = $(CROSS_COMPILE)gcc
@@ -43,7 +44,7 @@ STRIP = $(CROSS_COMPILE)strip
 
 DEFAULT_CFLAGS = $(shell $(SDL_CONFIG) --cflags)
 
-MORE_CFLAGS = -DFMSX -DUNIX -DNARROW -DSOUND -DBPP16 -DSDL -DLSB_FIRST \
+MORE_CFLAGS = -DFMSX -DUNIX -DNARROW -DSOUND -DBPP16 -DSDL -DLSB_FIRST -std=gnu11 \
 -I. -I$(CHAINPREFIX)/usr/include/ \
  -DMPU_JZ4740 -mips32 \
  -O3 -fsigned-char -ffast-math -fomit-frame-pointer -fno-strength-reduce \

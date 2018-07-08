@@ -7,7 +7,8 @@
 MSX_VERSION=1.1.0
 
 TARGET = assets/dingux-msx
-SDL_CONFIG = sr/bin/sdl-config
+SDL_CONFIG = /usr/bin/sdl-config
+
 OBJS = gp2x_psp.o \
 cpudingux.o \
 fMSX.o MSX.o Patch.o Sound.o Disk.o \
@@ -31,12 +32,13 @@ psp_menu_list.o \
 psp_editor.o \
 unzip.o \
 ioapi.o \
+sha1.o \
 psp_fmgr.o
 
 CC = gcc
 CXX = g++
 
-MORE_CFLAGS = -DFMSX -DUNIX -DNARROW -DSOUND -DBPP16 -DSDL -DLSB_FIRST -I/usr/include/SDL \
+MORE_CFLAGS = -DFMSX -DUNIX -DNARROW -DSOUND -DBPP16 -DSDL -DLSB_FIRST `$(SDL_CONFIG) --cflags` \
 -I. -I$(CHAINPREFIX)/usr/include/ \
  -O3 -fsigned-char -ffast-math -fomit-frame-pointer -fno-strength-reduce \
  -DDINGUX_MODE \
@@ -44,7 +46,7 @@ MORE_CFLAGS = -DFMSX -DUNIX -DNARROW -DSOUND -DBPP16 -DSDL -DLSB_FIRST -I/usr/in
  -DNO_STDIO_REDIRECT \
  -DMSX_VERSION=\"$(MSX_VERSION)\"
 
-LDFLAGS =   -lm -lz -lSDL
+LDFLAGS =   -lm -lz `$(SDL_CONFIG) --libs`
 
 LIBS += -lSDL_image -lpng -lpthread  -ldl -lSDL
 

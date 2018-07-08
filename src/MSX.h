@@ -30,7 +30,7 @@
 
 #define HPERIOD      1368        /* HPeriod, VDP cycles      */
 #define VPERIOD_PAL  (HPERIOD*313) /* PAL VPeriod, VDP ccls  */
-#define VPERIOD_NTSC (HPERIOD*262) /* NTSC VPeriod, VDP ccls */ 
+#define VPERIOD_NTSC (HPERIOD*262) /* NTSC VPeriod, VDP ccls */
 #define HREFRESH_240 960         /* 240dot scanline refresh  */
 #define HREFRESH_256 1024        /* 256dot scanline refresh  */
 
@@ -53,7 +53,7 @@
 #define MAXSPRITE2  8       /* Sprites/line in SCREEN 4-8    */
 #define MAXDRIVES   2       /* Number of disk drives         */
 #define MAXDISKS    32      /* Number of disks for a drive   */
-#define MAXMAPPERS  7       /* Total defined MegaROM mappers */
+#define MAXMAPPERS  8       /* Total defined MegaROM mappers */
 
 #define MAXCHANNELS (AY8910_CHANNELS+YM2413_CHANNELS)
   /* Number of sound channels used by the emulation */
@@ -84,11 +84,10 @@
 
 /** Variables used to control emulator behavior **************/
 extern byte Verbose;                  /* Debug msgs ON/OFF   */
-extern byte ROMTypeA,ROMTypeB;        /* MegaROM types       */
+extern int  ROMTypeA,ROMTypeB;        /* MegaROM types       */
 extern int  VRAMPages;       /* Number of RAM pages */
 extern int  VPeriod;                  /* CPU cycles / VBlank */
 extern int  HPeriod;                  /* CPU cycles / HBlank */
-extern byte UPeriod;                  /* Int-pts/Scr. update */
 extern byte JoyTypeA,JoyTypeB;        /* 0=No,1=Jstk,2/3=Mse */
 extern byte AutoFire;                 /* Autofire on [SPACE] */
 extern byte UseDrums;                 /* Drums for PSG noise */
@@ -112,6 +111,7 @@ extern byte ExitNow;                  /* 1: Exit emulator    */
 
 extern byte PSLReg;                   /* Primary slot reg.   */
 extern byte SSLReg;                   /* Secondary slot reg. */
+extern byte RCounter;        /* Counter for Z80's R register */
 
 extern char *ProgDir;                 /* Program directory   */
 extern char CartA[256];                   /* Cartridge A ROM file*/
@@ -127,7 +127,7 @@ extern char *StateName;               /* State save name     */
 
 extern FILE *CasStream;               /* Cassette I/O stream */
 
-extern char *FontName;                /* Font file for text  */ 
+extern char *FontName;                /* Font file for text  */
 extern byte *FontBuf;                 /* Font for text modes */
 extern byte UseFont;                  /* 1: Use external font*/
 
@@ -163,7 +163,7 @@ int SaveState(const char *FileName);
 /*************************************************************/
 int LoadState(const char *FileName);
 
-/** ChangeDisk() *********************************************/   
+/** ChangeDisk() *********************************************/
 /** Change disk image in a given drive. Closes current disk **/
 /** image if Name=0 was given. Returns 1 on success or 0 on **/
 /** failure. This function is part of generic disk drivers  **/
