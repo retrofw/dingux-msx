@@ -5,7 +5,7 @@
 /** This file contains implementation for FD/DD tables of   **/
 /** Z80 commands. It is included from Z80.c.                **/
 /**                                                         **/
-/** Copyright (C) Marat Fayzullin 1994-2003                 **/
+/** Copyright (C) Marat Fayzullin 1994-2008                 **/
 /**     You are not allowed to distribute this software     **/
 /**     commercially. Please, notify me, if you make any    **/
 /**     changes to this file.                               **/
@@ -50,9 +50,9 @@ case ADD_E:    M_ADD(CPU.DE.B.l);break;
 case ADD_H:    M_ADD(CPU.XX.B.h);break;
 case ADD_L:    M_ADD(CPU.XX.B.l);break;
 case ADD_A:    M_ADD(CPU.AF.B.h);break;
-case ADD_xHL:  I=RdZ80(CPU.XX.W+(offset)RdZ80(CPU.PC.W++));
+case ADD_xHL:  I=RdZ80(CPU.XX.W+(offset)OpZ80(CPU.PC.W++));
                M_ADD(I);break;
-case ADD_BYTE: I=RdZ80(CPU.PC.W++);M_ADD(I);break;
+case ADD_BYTE: I=OpZ80(CPU.PC.W++);M_ADD(I);break;
 
 case SUB_B:    M_SUB(CPU.BC.B.h);break;
 case SUB_C:    M_SUB(CPU.BC.B.l);break;
@@ -61,9 +61,9 @@ case SUB_E:    M_SUB(CPU.DE.B.l);break;
 case SUB_H:    M_SUB(CPU.XX.B.h);break;
 case SUB_L:    M_SUB(CPU.XX.B.l);break;
 case SUB_A:    CPU.AF.B.h=0;CPU.AF.B.l=N_FLAG|Z_FLAG;break;
-case SUB_xHL:  I=RdZ80(CPU.XX.W+(offset)RdZ80(CPU.PC.W++));
+case SUB_xHL:  I=RdZ80(CPU.XX.W+(offset)OpZ80(CPU.PC.W++));
                M_SUB(I);break;
-case SUB_BYTE: I=RdZ80(CPU.PC.W++);M_SUB(I);break;
+case SUB_BYTE: I=OpZ80(CPU.PC.W++);M_SUB(I);break;
 
 case AND_B:    M_AND(CPU.BC.B.h);break;
 case AND_C:    M_AND(CPU.BC.B.l);break;
@@ -72,9 +72,9 @@ case AND_E:    M_AND(CPU.DE.B.l);break;
 case AND_H:    M_AND(CPU.XX.B.h);break;
 case AND_L:    M_AND(CPU.XX.B.l);break;
 case AND_A:    M_AND(CPU.AF.B.h);break;
-case AND_xHL:  I=RdZ80(CPU.XX.W+(offset)RdZ80(CPU.PC.W++));
+case AND_xHL:  I=RdZ80(CPU.XX.W+(offset)OpZ80(CPU.PC.W++));
                M_AND(I);break;
-case AND_BYTE: I=RdZ80(CPU.PC.W++);M_AND(I);break;
+case AND_BYTE: I=OpZ80(CPU.PC.W++);M_AND(I);break;
 
 case OR_B:     M_OR(CPU.BC.B.h);break;
 case OR_C:     M_OR(CPU.BC.B.l);break;
@@ -83,9 +83,9 @@ case OR_E:     M_OR(CPU.DE.B.l);break;
 case OR_H:     M_OR(CPU.XX.B.h);break;
 case OR_L:     M_OR(CPU.XX.B.l);break;
 case OR_A:     M_OR(CPU.AF.B.h);break;
-case OR_xHL:   I=RdZ80(CPU.XX.W+(offset)RdZ80(CPU.PC.W++));
+case OR_xHL:   I=RdZ80(CPU.XX.W+(offset)OpZ80(CPU.PC.W++));
                M_OR(I);break;
-case OR_BYTE:  I=RdZ80(CPU.PC.W++);M_OR(I);break;
+case OR_BYTE:  I=OpZ80(CPU.PC.W++);M_OR(I);break;
 
 case ADC_B:    M_ADC(CPU.BC.B.h);break;
 case ADC_C:    M_ADC(CPU.BC.B.l);break;
@@ -94,9 +94,9 @@ case ADC_E:    M_ADC(CPU.DE.B.l);break;
 case ADC_H:    M_ADC(CPU.XX.B.h);break;
 case ADC_L:    M_ADC(CPU.XX.B.l);break;
 case ADC_A:    M_ADC(CPU.AF.B.h);break;
-case ADC_xHL:  I=RdZ80(CPU.XX.W+(offset)RdZ80(CPU.PC.W++));
+case ADC_xHL:  I=RdZ80(CPU.XX.W+(offset)OpZ80(CPU.PC.W++));
                M_ADC(I);break;
-case ADC_BYTE: I=RdZ80(CPU.PC.W++);M_ADC(I);break;
+case ADC_BYTE: I=OpZ80(CPU.PC.W++);M_ADC(I);break;
 
 case SBC_B:    M_SBC(CPU.BC.B.h);break;
 case SBC_C:    M_SBC(CPU.BC.B.l);break;
@@ -105,9 +105,9 @@ case SBC_E:    M_SBC(CPU.DE.B.l);break;
 case SBC_H:    M_SBC(CPU.XX.B.h);break;
 case SBC_L:    M_SBC(CPU.XX.B.l);break;
 case SBC_A:    M_SBC(CPU.AF.B.h);break;
-case SBC_xHL:  I=RdZ80(CPU.XX.W+(offset)RdZ80(CPU.PC.W++));
+case SBC_xHL:  I=RdZ80(CPU.XX.W+(offset)OpZ80(CPU.PC.W++));
                M_SBC(I);break;
-case SBC_BYTE: I=RdZ80(CPU.PC.W++);M_SBC(I);break;
+case SBC_BYTE: I=OpZ80(CPU.PC.W++);M_SBC(I);break;
 
 case XOR_B:    M_XOR(CPU.BC.B.h);break;
 case XOR_C:    M_XOR(CPU.BC.B.l);break;
@@ -116,9 +116,9 @@ case XOR_E:    M_XOR(CPU.DE.B.l);break;
 case XOR_H:    M_XOR(CPU.XX.B.h);break;
 case XOR_L:    M_XOR(CPU.XX.B.l);break;
 case XOR_A:    CPU.AF.B.h=0;CPU.AF.B.l=P_FLAG|Z_FLAG;break;
-case XOR_xHL:  I=RdZ80(CPU.XX.W+(offset)RdZ80(CPU.PC.W++));
+case XOR_xHL:  I=RdZ80(CPU.XX.W+(offset)OpZ80(CPU.PC.W++));
                M_XOR(I);break;
-case XOR_BYTE: I=RdZ80(CPU.PC.W++);M_XOR(I);break;
+case XOR_BYTE: I=OpZ80(CPU.PC.W++);M_XOR(I);break;
 
 case CP_B:     M_CP(CPU.BC.B.h);break;
 case CP_C:     M_CP(CPU.BC.B.l);break;
@@ -127,10 +127,10 @@ case CP_E:     M_CP(CPU.DE.B.l);break;
 case CP_H:     M_CP(CPU.XX.B.h);break;
 case CP_L:     M_CP(CPU.XX.B.l);break;
 case CP_A:     CPU.AF.B.l=N_FLAG|Z_FLAG;break;
-case CP_xHL:   I=RdZ80(CPU.XX.W+(offset)RdZ80(CPU.PC.W++));
+case CP_xHL:   I=RdZ80(CPU.XX.W+(offset)OpZ80(CPU.PC.W++));
                M_CP(I);break;
-case CP_BYTE:  I=RdZ80(CPU.PC.W++);M_CP(I);break;
-               
+case CP_BYTE:  I=OpZ80(CPU.PC.W++);M_CP(I);break;
+
 case LD_BC_WORD: M_LDWORD(BC);break;
 case LD_DE_WORD: M_LDWORD(DE);break;
 case LD_HL_WORD: M_LDWORD(XX);break;
@@ -164,7 +164,7 @@ case DEC_H:    M_DEC(CPU.XX.B.h);break;
 case DEC_L:    M_DEC(CPU.XX.B.l);break;
 case DEC_A:    M_DEC(CPU.AF.B.h);break;
 case DEC_xHL:  I=RdZ80(CPU.XX.W+(offset)RdZ80(CPU.PC.W));M_DEC(I);
-               WrZ80(CPU.XX.W+(offset)RdZ80(CPU.PC.W++),I);
+               WrZ80(CPU.XX.W+(offset)OpZ80(CPU.PC.W++),I);
                break;
 
 case INC_B:    M_INC(CPU.BC.B.h);break;
@@ -175,7 +175,7 @@ case INC_H:    M_INC(CPU.XX.B.h);break;
 case INC_L:    M_INC(CPU.XX.B.l);break;
 case INC_A:    M_INC(CPU.AF.B.h);break;
 case INC_xHL:  I=RdZ80(CPU.XX.W+(offset)RdZ80(CPU.PC.W));M_INC(I);
-               WrZ80(CPU.XX.W+(offset)RdZ80(CPU.PC.W++),I);
+               WrZ80(CPU.XX.W+(offset)OpZ80(CPU.PC.W++),I);
                break;
 
 case RLCA:
@@ -226,8 +226,8 @@ case RET:  M_RET;break;
 case SCF:  S(C_FLAG);R(N_FLAG|H_FLAG);break;
 case CPL:  CPU.AF.B.h=~CPU.AF.B.h;S(N_FLAG|H_FLAG);break;
 case NOP:  break;
-case OUTA: OutZ80(RdZ80(CPU.PC.W++),CPU.AF.B.h);break;
-case INA:  CPU.AF.B.h=InZ80(RdZ80(CPU.PC.W++));break;
+case OUTA: I=OpZ80(CPU.PC.W++);OutZ80(I|(CPU.AF.W&0xFF00),CPU.AF.B.h);break;
+case INA:  I=OpZ80(CPU.PC.W++);CPU.AF.B.h=InZ80(I|(CPU.AF.W&0xFF00));break;
 
 case HALT:
   CPU.PC.W--;
@@ -262,8 +262,8 @@ case EXX:
   break;
 
 case EX_DE_HL: J.W=CPU.DE.W;CPU.DE.W=CPU.HL.W;CPU.HL.W=J.W;break;
-case EX_AF_AF: J.W=CPU.AF.W;CPU.AF.W=CPU.AF1.W;CPU.AF1.W=J.W;break;  
-  
+case EX_AF_AF: J.W=CPU.AF.W;CPU.AF.W=CPU.AF1.W;CPU.AF1.W=J.W;break;
+
 case LD_B_B:   CPU.BC.B.h=CPU.BC.B.h;break;
 case LD_C_B:   CPU.BC.B.l=CPU.BC.B.h;break;
 case LD_D_B:   CPU.DE.B.h=CPU.BC.B.h;break;
@@ -271,7 +271,7 @@ case LD_E_B:   CPU.DE.B.l=CPU.BC.B.h;break;
 case LD_H_B:   CPU.XX.B.h=CPU.BC.B.h;break;
 case LD_L_B:   CPU.XX.B.l=CPU.BC.B.h;break;
 case LD_A_B:   CPU.AF.B.h=CPU.BC.B.h;break;
-case LD_xHL_B: J.W=CPU.XX.W+(offset)RdZ80(CPU.PC.W++);
+case LD_xHL_B: J.W=CPU.XX.W+(offset)OpZ80(CPU.PC.W++);
                WrZ80(J.W,CPU.BC.B.h);break;
 
 case LD_B_C:   CPU.BC.B.h=CPU.BC.B.l;break;
@@ -281,7 +281,7 @@ case LD_E_C:   CPU.DE.B.l=CPU.BC.B.l;break;
 case LD_H_C:   CPU.XX.B.h=CPU.BC.B.l;break;
 case LD_L_C:   CPU.XX.B.l=CPU.BC.B.l;break;
 case LD_A_C:   CPU.AF.B.h=CPU.BC.B.l;break;
-case LD_xHL_C: J.W=CPU.XX.W+(offset)RdZ80(CPU.PC.W++);
+case LD_xHL_C: J.W=CPU.XX.W+(offset)OpZ80(CPU.PC.W++);
                WrZ80(J.W,CPU.BC.B.l);break;
 
 case LD_B_D:   CPU.BC.B.h=CPU.DE.B.h;break;
@@ -291,7 +291,7 @@ case LD_E_D:   CPU.DE.B.l=CPU.DE.B.h;break;
 case LD_H_D:   CPU.XX.B.h=CPU.DE.B.h;break;
 case LD_L_D:   CPU.XX.B.l=CPU.DE.B.h;break;
 case LD_A_D:   CPU.AF.B.h=CPU.DE.B.h;break;
-case LD_xHL_D: J.W=CPU.XX.W+(offset)RdZ80(CPU.PC.W++);
+case LD_xHL_D: J.W=CPU.XX.W+(offset)OpZ80(CPU.PC.W++);
                WrZ80(J.W,CPU.DE.B.h);break;
 
 case LD_B_E:   CPU.BC.B.h=CPU.DE.B.l;break;
@@ -301,7 +301,7 @@ case LD_E_E:   CPU.DE.B.l=CPU.DE.B.l;break;
 case LD_H_E:   CPU.XX.B.h=CPU.DE.B.l;break;
 case LD_L_E:   CPU.XX.B.l=CPU.DE.B.l;break;
 case LD_A_E:   CPU.AF.B.h=CPU.DE.B.l;break;
-case LD_xHL_E: J.W=CPU.XX.W+(offset)RdZ80(CPU.PC.W++);
+case LD_xHL_E: J.W=CPU.XX.W+(offset)OpZ80(CPU.PC.W++);
                WrZ80(J.W,CPU.DE.B.l);break;
 
 case LD_B_H:   CPU.BC.B.h=CPU.XX.B.h;break;
@@ -311,7 +311,7 @@ case LD_E_H:   CPU.DE.B.l=CPU.XX.B.h;break;
 case LD_H_H:   CPU.XX.B.h=CPU.XX.B.h;break;
 case LD_L_H:   CPU.XX.B.l=CPU.XX.B.h;break;
 case LD_A_H:   CPU.AF.B.h=CPU.XX.B.h;break;
-case LD_xHL_H: J.W=CPU.XX.W+(offset)RdZ80(CPU.PC.W++);
+case LD_xHL_H: J.W=CPU.XX.W+(offset)OpZ80(CPU.PC.W++);
                WrZ80(J.W,CPU.HL.B.h);break;
 
 case LD_B_L:   CPU.BC.B.h=CPU.XX.B.l;break;
@@ -321,7 +321,7 @@ case LD_E_L:   CPU.DE.B.l=CPU.XX.B.l;break;
 case LD_H_L:   CPU.XX.B.h=CPU.XX.B.l;break;
 case LD_L_L:   CPU.XX.B.l=CPU.XX.B.l;break;
 case LD_A_L:   CPU.AF.B.h=CPU.XX.B.l;break;
-case LD_xHL_L: J.W=CPU.XX.W+(offset)RdZ80(CPU.PC.W++);
+case LD_xHL_L: J.W=CPU.XX.W+(offset)OpZ80(CPU.PC.W++);
                WrZ80(J.W,CPU.HL.B.l);break;
 
 case LD_B_A:   CPU.BC.B.h=CPU.AF.B.h;break;
@@ -331,53 +331,53 @@ case LD_E_A:   CPU.DE.B.l=CPU.AF.B.h;break;
 case LD_H_A:   CPU.XX.B.h=CPU.AF.B.h;break;
 case LD_L_A:   CPU.XX.B.l=CPU.AF.B.h;break;
 case LD_A_A:   CPU.AF.B.h=CPU.AF.B.h;break;
-case LD_xHL_A: J.W=CPU.XX.W+(offset)RdZ80(CPU.PC.W++);
+case LD_xHL_A: J.W=CPU.XX.W+(offset)OpZ80(CPU.PC.W++);
                WrZ80(J.W,CPU.AF.B.h);break;
 
 case LD_xBC_A: WrZ80(CPU.BC.W,CPU.AF.B.h);break;
 case LD_xDE_A: WrZ80(CPU.DE.W,CPU.AF.B.h);break;
 
-case LD_B_xHL:    CPU.BC.B.h=RdZ80(CPU.XX.W+(offset)RdZ80(CPU.PC.W++));break;
-case LD_C_xHL:    CPU.BC.B.l=RdZ80(CPU.XX.W+(offset)RdZ80(CPU.PC.W++));break;
-case LD_D_xHL:    CPU.DE.B.h=RdZ80(CPU.XX.W+(offset)RdZ80(CPU.PC.W++));break;
-case LD_E_xHL:    CPU.DE.B.l=RdZ80(CPU.XX.W+(offset)RdZ80(CPU.PC.W++));break;
-case LD_H_xHL:    CPU.HL.B.h=RdZ80(CPU.XX.W+(offset)RdZ80(CPU.PC.W++));break;
-case LD_L_xHL:    CPU.HL.B.l=RdZ80(CPU.XX.W+(offset)RdZ80(CPU.PC.W++));break;
-case LD_A_xHL:    CPU.AF.B.h=RdZ80(CPU.XX.W+(offset)RdZ80(CPU.PC.W++));break;
+case LD_B_xHL:    CPU.BC.B.h=RdZ80(CPU.XX.W+(offset)OpZ80(CPU.PC.W++));break;
+case LD_C_xHL:    CPU.BC.B.l=RdZ80(CPU.XX.W+(offset)OpZ80(CPU.PC.W++));break;
+case LD_D_xHL:    CPU.DE.B.h=RdZ80(CPU.XX.W+(offset)OpZ80(CPU.PC.W++));break;
+case LD_E_xHL:    CPU.DE.B.l=RdZ80(CPU.XX.W+(offset)OpZ80(CPU.PC.W++));break;
+case LD_H_xHL:    CPU.HL.B.h=RdZ80(CPU.XX.W+(offset)OpZ80(CPU.PC.W++));break;
+case LD_L_xHL:    CPU.HL.B.l=RdZ80(CPU.XX.W+(offset)OpZ80(CPU.PC.W++));break;
+case LD_A_xHL:    CPU.AF.B.h=RdZ80(CPU.XX.W+(offset)OpZ80(CPU.PC.W++));break;
 
-case LD_B_BYTE:   CPU.BC.B.h=RdZ80(CPU.PC.W++);break;
-case LD_C_BYTE:   CPU.BC.B.l=RdZ80(CPU.PC.W++);break;
-case LD_D_BYTE:   CPU.DE.B.h=RdZ80(CPU.PC.W++);break;
-case LD_E_BYTE:   CPU.DE.B.l=RdZ80(CPU.PC.W++);break;
-case LD_H_BYTE:   CPU.XX.B.h=RdZ80(CPU.PC.W++);break;
-case LD_L_BYTE:   CPU.XX.B.l=RdZ80(CPU.PC.W++);break;
-case LD_A_BYTE:   CPU.AF.B.h=RdZ80(CPU.PC.W++);break;
-case LD_xHL_BYTE: J.W=CPU.XX.W+(offset)RdZ80(CPU.PC.W++);
-                  WrZ80(J.W,RdZ80(CPU.PC.W++));break;
+case LD_B_BYTE:   CPU.BC.B.h=OpZ80(CPU.PC.W++);break;
+case LD_C_BYTE:   CPU.BC.B.l=OpZ80(CPU.PC.W++);break;
+case LD_D_BYTE:   CPU.DE.B.h=OpZ80(CPU.PC.W++);break;
+case LD_E_BYTE:   CPU.DE.B.l=OpZ80(CPU.PC.W++);break;
+case LD_H_BYTE:   CPU.XX.B.h=OpZ80(CPU.PC.W++);break;
+case LD_L_BYTE:   CPU.XX.B.l=OpZ80(CPU.PC.W++);break;
+case LD_A_BYTE:   CPU.AF.B.h=OpZ80(CPU.PC.W++);break;
+case LD_xHL_BYTE: J.W=CPU.XX.W+(offset)OpZ80(CPU.PC.W++);
+                  WrZ80(J.W,OpZ80(CPU.PC.W++));break;
 
 case LD_xWORD_HL:
-  J.B.l=RdZ80(CPU.PC.W++);
-  J.B.h=RdZ80(CPU.PC.W++);
+  J.B.l=OpZ80(CPU.PC.W++);
+  J.B.h=OpZ80(CPU.PC.W++);
   WrZ80(J.W++,CPU.XX.B.l);
   WrZ80(J.W,CPU.XX.B.h);
   break;
 
 case LD_HL_xWORD:
-  J.B.l=RdZ80(CPU.PC.W++);
-  J.B.h=RdZ80(CPU.PC.W++);
+  J.B.l=OpZ80(CPU.PC.W++);
+  J.B.h=OpZ80(CPU.PC.W++);
   CPU.XX.B.l=RdZ80(J.W++);
   CPU.XX.B.h=RdZ80(J.W);
   break;
 
 case LD_A_xWORD:
-  J.B.l=RdZ80(CPU.PC.W++);
-  J.B.h=RdZ80(CPU.PC.W++);
+  J.B.l=OpZ80(CPU.PC.W++);
+  J.B.h=OpZ80(CPU.PC.W++);
   CPU.AF.B.h=RdZ80(J.W);
   break;
 
 case LD_xWORD_A:
-  J.B.l=RdZ80(CPU.PC.W++);
-  J.B.h=RdZ80(CPU.PC.W++);
+  J.B.l=OpZ80(CPU.PC.W++);
+  J.B.h=OpZ80(CPU.PC.W++);
   WrZ80(J.W,CPU.AF.B.h);
   break;
 

@@ -7,9 +7,9 @@
 /** LoopZ80(), and PatchZ80() functions to accomodate the   **/
 /** emulated machine's architecture.                        **/
 /**                                                         **/
-/** Copyright (C) Marat Fayzullin 1994-2003                 **/
+/** Copyright (C) Marat Fayzullin 1994-2008                 **/
 /**     You are not allowed to distribute this software     **/
-/**     commercially. Please, notify me, if you make any    **/   
+/**     commercially. Please, notify me, if you make any    **/
 /**     changes to this file.                               **/
 /*************************************************************/
 
@@ -18,7 +18,8 @@
 #include <stdio.h>
 
 /** INLINE ***************************************************/
-/** Different compilers inline C functions differently.     **/
+/** C99 standard has "inline", but older compilers used     **/
+/** __inline for the same purpose.                          **/
 /*************************************************************/
 #ifdef __GNUC__
 #define INLINE inline
@@ -36,17 +37,30 @@ Z80 CPU; /* Z80 CPU state and regs */
 extern byte *RAM;
 INLINE byte RdZ80(word A) { return(RAM[A]); }
 #endif
+
 #ifdef MG
+#define RdZ80 RDZ80
 extern byte *Page[];
 INLINE byte RdZ80(word A) { return(Page[A>>13][A&0x1FFF]); }
 #endif
+
 #ifdef FMSX
-extern byte *RAM[],PSL[],SSLReg;
+#define FAST_RDOP
+extern byte *RAM[],PSL[],SSLReg,RCounter;
 INLINE byte RdZ80(word A)
 {
   if(A!=0xFFFF) return(RAM[A>>13][A&0x1FFF]);
   else return((PSL[3]==3)? ~SSLReg:RAM[7][0x1FFF]);
 }
+INLINE byte OpZ80(word A) { return(RAM[A>>13][A&0x1FFF]); }
+#endif
+
+/** FAST_RDOP ************************************************/
+/** With this #define not present, RdZ80() should perform   **/
+/** the functions of OpZ80().                               **/
+/*************************************************************/
+#ifndef FAST_RDOP
+#define OpZ80(A) RdZ80(A)
 #endif
 
 #define S(Fl)        CPU.AF.B.l|=Fl
@@ -79,7 +93,7 @@ INLINE byte RdZ80(word A)
     Rg=(Rg>>1)|(CPU.AF.B.l<<7);     \
     CPU.AF.B.l=PZSTable[Rg];        \
   }
-  
+
 #define M_SLA(Rg)      \
   CPU.AF.B.l=Rg>>7;Rg<<=1;CPU.AF.B.l|=PZSTable[Rg]
 #define M_SRA(Rg)      \
@@ -97,24 +111,24 @@ INLINE byte RdZ80(word A)
 #define M_RES(Bit,Rg) Rg&=~(1<<Bit)
 
 #define M_POP(Rg)      \
-  CPU.Rg.B.l=RdZ80(CPU.SP.W++);CPU.Rg.B.h=RdZ80(CPU.SP.W++)
+  CPU.Rg.B.l=OpZ80(CPU.SP.W++);CPU.Rg.B.h=OpZ80(CPU.SP.W++)
 #define M_PUSH(Rg)     \
   WrZ80(--CPU.SP.W,CPU.Rg.B.h);WrZ80(--CPU.SP.W,CPU.Rg.B.l)
 
 #define M_CALL         \
-  J.B.l=RdZ80(CPU.PC.W++);J.B.h=RdZ80(CPU.PC.W++);         \
+  J.B.l=OpZ80(CPU.PC.W++);J.B.h=OpZ80(CPU.PC.W++);         \
   WrZ80(--CPU.SP.W,CPU.PC.B.h);WrZ80(--CPU.SP.W,CPU.PC.B.l); \
   CPU.PC.W=J.W
 
-#define M_JP  J.B.l=RdZ80(CPU.PC.W++);J.B.h=RdZ80(CPU.PC.W);CPU.PC.W=J.W
-#define M_JR  CPU.PC.W+=(offset)RdZ80(CPU.PC.W)+1
-#define M_RET CPU.PC.B.l=RdZ80(CPU.SP.W++);CPU.PC.B.h=RdZ80(CPU.SP.W++)
+#define M_JP  J.B.l=OpZ80(CPU.PC.W++);J.B.h=OpZ80(CPU.PC.W);CPU.PC.W=J.W
+#define M_JR  CPU.PC.W+=(offset)OpZ80(CPU.PC.W)+1
+#define M_RET CPU.PC.B.l=OpZ80(CPU.SP.W++);CPU.PC.B.h=OpZ80(CPU.SP.W++)
 
 #define M_RST(Ad)      \
   WrZ80(--CPU.SP.W,CPU.PC.B.h);WrZ80(--CPU.SP.W,CPU.PC.B.l);CPU.PC.W=Ad
 
 #define M_LDWORD(Rg)   \
-  CPU.Rg.B.l=RdZ80(CPU.PC.W++);CPU.Rg.B.h=RdZ80(CPU.PC.W++)
+  CPU.Rg.B.l=OpZ80(CPU.PC.W++);CPU.Rg.B.h=OpZ80(CPU.PC.W++)
 
 #define M_ADD(Rg)      \
   J.W=CPU.AF.B.h+Rg;     \
@@ -122,7 +136,7 @@ INLINE byte RdZ80(word A)
     (~(CPU.AF.B.h^Rg)&(Rg^J.B.l)&0x80? V_FLAG:0)| \
     J.B.h|ZSTable[J.B.l]|                        \
     ((CPU.AF.B.h^Rg^J.B.l)&H_FLAG);               \
-  CPU.AF.B.h=J.B.l       
+  CPU.AF.B.h=J.B.l
 
 #define M_SUB(Rg)      \
   J.W=CPU.AF.B.h-Rg;    \
@@ -160,7 +174,7 @@ INLINE byte RdZ80(word A)
 #define M_XOR(Rg) CPU.AF.B.h^=Rg;CPU.AF.B.l=PZSTable[CPU.AF.B.h]
 
 #define M_IN(Rg)        \
-  Rg=InZ80(CPU.BC.B.l);  \
+  Rg=InZ80(CPU.BC.W);  \
   CPU.AF.B.l=PZSTable[Rg]|(CPU.AF.B.l&C_FLAG)
 
 #define M_INC(Rg)       \
@@ -191,7 +205,7 @@ INLINE byte RdZ80(word A)
     ((CPU.HL.W^CPU.Rg.W^J.W)&0x1000? H_FLAG:0)|                  \
     (J.W? 0:Z_FLAG)|(J.B.h&S_FLAG);                            \
   CPU.HL.W=J.W
-   
+
 #define M_SBCW(Rg)      \
   I=CPU.AF.B.l&C_FLAG;J.W=(CPU.HL.W-CPU.Rg.W-I)&0xFFFF;           \
   CPU.AF.B.l=                                                   \
@@ -263,7 +277,7 @@ enum CodesCB
   RES4_B,RES4_C,RES4_D,RES4_E,RES4_H,RES4_L,RES4_xHL,RES4_A,
   RES5_B,RES5_C,RES5_D,RES5_E,RES5_H,RES5_L,RES5_xHL,RES5_A,
   RES6_B,RES6_C,RES6_D,RES6_E,RES6_H,RES6_L,RES6_xHL,RES6_A,
-  RES7_B,RES7_C,RES7_D,RES7_E,RES7_H,RES7_L,RES7_xHL,RES7_A,  
+  RES7_B,RES7_C,RES7_D,RES7_E,RES7_H,RES7_L,RES7_xHL,RES7_A,
   SET0_B,SET0_C,SET0_D,SET0_E,SET0_H,SET0_L,SET0_xHL,SET0_A,
   SET1_B,SET1_C,SET1_D,SET1_E,SET1_H,SET1_L,SET1_xHL,SET1_A,
   SET2_B,SET2_C,SET2_D,SET2_E,SET2_H,SET2_L,SET2_xHL,SET2_A,
@@ -273,7 +287,7 @@ enum CodesCB
   SET6_B,SET6_C,SET6_D,SET6_E,SET6_H,SET6_L,SET6_xHL,SET6_A,
   SET7_B,SET7_C,SET7_D,SET7_E,SET7_H,SET7_L,SET7_xHL,SET7_A
 };
-  
+
 enum CodesED
 {
   DB_00,DB_01,DB_02,DB_03,DB_04,DB_05,DB_06,DB_07,
@@ -314,17 +328,18 @@ static void CodesCB()
 {
   register byte I;
 
-  I=RdZ80(CPU.PC.W++);
+  I=OpZ80(CPU.PC.W++);
   CPU.ICount-=CyclesCB[I];
+  RCounter++;
   switch(I)
   {
 #include "CodesCB.h"
     default:
       if(CPU.TrapBadOps)
         printf
-        (   
+        (
           "[Z80 %lX] Unrecognized instruction: CB %02X at PC=%04X\n",
-          (long)(CPU.User),RdZ80(CPU.PC.W-1),CPU.PC.W-2
+          (long)(CPU.User),OpZ80(CPU.PC.W-1),CPU.PC.W-2
         );
   }
 }
@@ -334,9 +349,9 @@ static void CodesDDCB()
   register pair J;
   register byte I;
 
-#define XX IX    
-  J.W=CPU.XX.W+(offset)RdZ80(CPU.PC.W++);
-  I=RdZ80(CPU.PC.W++);
+#define XX IX
+  J.W=CPU.XX.W+(offset)OpZ80(CPU.PC.W++);
+  I=OpZ80(CPU.PC.W++);
   CPU.ICount-=CyclesXXCB[I];
   switch(I)
   {
@@ -346,7 +361,7 @@ static void CodesDDCB()
         printf
         (
           "[Z80 %lX] Unrecognized instruction: DD CB %02X %02X at PC=%04X\n",
-          (long)(CPU.User),RdZ80(CPU.PC.W-2),RdZ80(CPU.PC.W-1),CPU.PC.W-4
+          (long)(CPU.User),OpZ80(CPU.PC.W-2),OpZ80(CPU.PC.W-1),CPU.PC.W-4
         );
   }
 #undef XX
@@ -358,8 +373,8 @@ static void CodesFDCB()
   register byte I;
 
 #define XX IY
-  J.W=CPU.XX.W+(offset)RdZ80(CPU.PC.W++);
-  I=RdZ80(CPU.PC.W++);
+  J.W=CPU.XX.W+(offset)OpZ80(CPU.PC.W++);
+  I=OpZ80(CPU.PC.W++);
   CPU.ICount-=CyclesXXCB[I];
   switch(I)
   {
@@ -369,7 +384,7 @@ static void CodesFDCB()
         printf
         (
           "[Z80 %lX] Unrecognized instruction: FD CB %02X %02X at PC=%04X\n",
-          (long)CPU.User,RdZ80(CPU.PC.W-2),RdZ80(CPU.PC.W-1),CPU.PC.W-4
+          (long)CPU.User,OpZ80(CPU.PC.W-2),OpZ80(CPU.PC.W-1),CPU.PC.W-4
         );
   }
 #undef XX
@@ -380,8 +395,9 @@ static void CodesED()
   register byte I;
   register pair J;
 
-  I=RdZ80(CPU.PC.W++);
+  I=OpZ80(CPU.PC.W++);
   CPU.ICount-=CyclesED[I];
+  RCounter++;
   switch(I)
   {
 #include "CodesED.h"
@@ -392,7 +408,7 @@ static void CodesED()
         printf
         (
           "[Z80 %lX] Unrecognized instruction: ED %02X at PC=%04X\n",
-          (long)CPU.User,RdZ80(CPU.PC.W-1),CPU.PC.W-2
+          (long)CPU.User,OpZ80(CPU.PC.W-1),CPU.PC.W-2
         );
   }
 }
@@ -403,8 +419,9 @@ static void CodesDD()
   register pair J;
 
 #define XX IX
-  I=RdZ80(CPU.PC.W++);
+  I=OpZ80(CPU.PC.W++);
   CPU.ICount-=CyclesXX[I];
+  RCounter++;
   switch(I)
   {
 #include "CodesXX.h"
@@ -418,7 +435,7 @@ static void CodesDD()
         printf
         (
           "[Z80 %lX] Unrecognized instruction: DD %02X at PC=%04X\n",
-          (long)CPU.User,RdZ80(CPU.PC.W-1),CPU.PC.W-2
+          (long)CPU.User,OpZ80(CPU.PC.W-1),CPU.PC.W-2
         );
   }
 #undef XX
@@ -430,8 +447,9 @@ static void CodesFD()
   register pair J;
 
 #define XX IY
-  I=RdZ80(CPU.PC.W++);
+  I=OpZ80(CPU.PC.W++);
   CPU.ICount-=CyclesXX[I];
+  RCounter++;
   switch(I)
   {
 #include "CodesXX.h"
@@ -444,7 +462,7 @@ static void CodesFD()
         printf
         (
           "Unrecognized instruction: FD %02X at PC=%04X\n",
-          RdZ80(CPU.PC.W-1),CPU.PC.W-2
+          OpZ80(CPU.PC.W-1),CPU.PC.W-2
         );
   }
 #undef XX
@@ -470,44 +488,79 @@ void ResetZ80()
   CPU.IX.W     = 0x0000;
   CPU.IY.W     = 0x0000;
   CPU.I        = 0x00;
+  CPU.R        = 0x00;
   CPU.IFF      = 0x00;
   CPU.ICount   = CPU.IPeriod;
   CPU.IRequest = INT_NONE;
+  CPU.IBackup  = 0;
 }
 
 /** ExecZ80() ************************************************/
-/** This function will execute a single Z80 opcode. It will **/
-/** then return next PC, and current register values in R.  **/
+/** This function will execute given number of Z80 cycles.  **/
+/** It will then return the number of cycles left, possibly **/
+/** negative, and current register values in R.             **/
 /*************************************************************/
-word ExecZ80()
+#ifdef EXECZ80
+int ExecZ80(register Z80 *R,register int RunCycles)
 {
   register byte I;
   register pair J;
 
-  I=RdZ80(CPU.PC.W++);
-  CPU.ICount-=Cycles[I];
-  switch(I)
+  for(CPU.ICount=RunCycles;;)
   {
-#include "Codes.h"
-    case PFX_CB: CodesCB();break;
-    case PFX_ED: CodesED();break;
-    case PFX_FD: CodesFD();break;
-    case PFX_DD: CodesDD();break;
-  }
+    while(CPU.ICount>0)
+    {
+#ifdef DEBUG
+      /* Turn tracing on when reached trap address */
+      if(CPU.PC.W==CPU.Trap) CPU.Trace=1;
+      /* Call single-step debugger, exit if requested */
+      if(CPU.Trace)
+        if(!DebugZ80(R)) return(CPU.ICount);
+#endif
 
-  /* We are done */
-  return(CPU.PC.W);
+      /* Read opcode and count cycles */
+      I=OpZ80(CPU.PC.W++);
+      /* Count cycles */
+      CPU.ICount-=Cycles[I];
+      RCounter++;
+
+      /* Interpret opcode */
+      switch(I)
+      {
+#include "Codes.h"
+        case PFX_CB: CodesCB();break;
+        case PFX_ED: CodesED();break;
+        case PFX_FD: CodesFD();break;
+        case PFX_DD: CodesDD();break;
+      }
+    }
+
+    /* Unless we have come here after EI, exit */
+    if(!(CPU.IFF&IFF_EI)) return(CPU.ICount);
+    else
+    {
+      /* Done with AfterEI state */
+      CPU.IFF=(CPU.IFF&~IFF_EI)|IFF_1;
+      /* Restore the ICount */
+      CPU.ICount+=CPU.IBackup-1;
+      /* Interrupt CPU if needed */
+      if((CPU.IRequest!=INT_NONE)&&(CPU.IRequest!=INT_QUIT)) IntZ80(R,CPU.IRequest);
+    }
+  }
 }
+#endif /* EXECZ80 */
 
 /** IntZ80() *************************************************/
 /** This function will generate interrupt of given vector.  **/
 /*************************************************************/
 void IntZ80(word Vector)
 {
+  /* If HALTed, take CPU off HALT instruction */
+  if(CPU.IFF&IFF_HALT) { CPU.PC.W++;CPU.IFF&=~IFF_HALT; }
+
   if((CPU.IFF&IFF_1)||(Vector==INT_NMI))
   {
-    /* If HALTed, take CPU off HALT instruction */
-    if(CPU.IFF&IFF_HALT) { CPU.PC.W++;CPU.IFF&=~IFF_HALT; }
+	RCounter++;
 
     /* Save PC on stack */
     M_PUSH(PC);
@@ -518,8 +571,7 @@ void IntZ80(word Vector)
     /* If it is NMI... */
     if(Vector==INT_NMI)
     {
-      /* Copy IFF1 to IFF2 */
-      if(CPU.IFF&IFF_1) CPU.IFF|=IFF_2; else CPU.IFF&=~IFF_2;
+	  CPU.ICount-=11;
       /* Clear IFF1 */
       CPU.IFF&=~(IFF_1|IFF_EI);
       /* Jump to hardwired NMI vector */
@@ -534,6 +586,7 @@ void IntZ80(word Vector)
     /* If in IM2 mode... */
     if(CPU.IFF&IFF_IM2)
     {
+	  CPU.ICount-=19;
       /* Make up the vector address */
       Vector=(Vector&0xFF)|((word)(CPU.I)<<8);
       /* Read the vector */
@@ -544,9 +597,10 @@ void IntZ80(word Vector)
     }
 
     /* If in IM1 mode, just jump to hardwired IRQ vector */
-    if(CPU.IFF&IFF_IM1) { CPU.PC.W=0x0038;return; }
+    if(CPU.IFF&IFF_IM1) { CPU.PC.W=0x0038;CPU.ICount-=13;return; }
 
     /* If in IM0 mode... */
+    CPU.ICount-=13;
 
     /* Jump to a vector */
     switch(Vector)
@@ -568,6 +622,7 @@ void IntZ80(word Vector)
 /** returns INT_QUIT. It will return the PC at which        **/
 /** emulation stopped, and current register values in R.    **/
 /*************************************************************/
+#ifndef EXECZ80
 word RunZ80()
 {
   register byte I;
@@ -575,8 +630,17 @@ word RunZ80()
 
   for(;;)
   {
-    I=RdZ80(CPU.PC.W++);
+#ifdef DEBUG
+    /* Turn tracing on when reached trap address */
+    if(CPU.PC.W==CPU.Trap) CPU.Trace=1;
+    /* Call single-step debugger, exit if requested */
+    if(CPU.Trace)
+      if(!DebugZ80(R)) return(CPU.PC.W);
+#endif
+
+    I=OpZ80(CPU.PC.W++);
     CPU.ICount-=Cycles[I];
+    RCounter++;
 
     switch(I)
     {
@@ -586,7 +650,7 @@ word RunZ80()
       case PFX_FD: CodesFD();break;
       case PFX_DD: CodesDD();break;
     }
- 
+
     /* If cycle counter expired... */
     if(CPU.ICount<=0)
     {
@@ -621,3 +685,4 @@ word RunZ80()
   /* Execution stopped */
   return(CPU.PC.W);
 }
+#endif /* !EXECZ80 */
