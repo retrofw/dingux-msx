@@ -19,11 +19,11 @@ typedef unsigned int   u32;
 
 //LUDO:
 # define MSX_RENDER_FAST       0
-# define MSX_RENDER_ZOOMED     1
-# define MSX_RENDER_FULLSCREEN 2
-# define MSX_LAST_RENDER       2
-# define MSX_RENDER_NORMAL     3
-# define MSX_RENDER_FIT        4
+// # define MSX_RENDER_ZOOMED     1
+// # define MSX_RENDER_FULLSCREEN 2
+# define MSX_LAST_RENDER       1
+# define MSX_RENDER_NORMAL     2
+# define MSX_RENDER_FIT        3
 
 # define MAX_PATH   256
 # define MSX_MAX_SAVE_STATE 5
