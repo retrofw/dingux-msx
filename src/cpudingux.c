@@ -27,7 +27,7 @@ authors and should not be interpreted as representing official policies, either 
 or implied, of Ludovic Jacomme.
 
 */
-
+#define _GNU_SOURCE
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,6 +36,8 @@ or implied, of Ludovic Jacomme.
 #include <fcntl.h>
 
 #include "cpudingux.h"
+
+
 
 /* Define this to the CPU frequency */
 #define CPU_FREQ 336000000    /* CPU clock: 336 MHz */
@@ -137,7 +139,7 @@ cpu_deinit()
   munmap((void *)jz_cpmregl, 0x80); 
   munmap((void *)jz_emcregl, 0x90);   
   close(jz_dev);
-  fcloseall();
+  //fcloseall();
   sync();
 }
 

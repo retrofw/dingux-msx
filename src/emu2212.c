@@ -140,7 +140,7 @@ EMUSCC_API e_int16 SCC_calc(SCC *scc)
   return scc->out ; 
 }
 
-INLINE void check_enable(SCC *scc)
+static INLINE void check_enable(SCC *scc)
 {
   if((scc->save_BFFE==0x20)&&(scc->save_9000 == 0x80)) scc->enable = 2 ;
   else if((scc->save_BFFE==0x00)&&(scc->save_9000 == 0x3F)) scc->enable = 1 ;

@@ -52,7 +52,7 @@ INLINE byte RdZ80(word A)
   if(A!=0xFFFF) return(RAM[A>>13][A&0x1FFF]);
   else return((PSL[3]==3)? ~SSLReg:RAM[7][0x1FFF]);
 }
-INLINE byte OpZ80(word A) { return(RAM[A>>13][A&0x1FFF]); }
+static INLINE byte OpZ80(word A) { return(RAM[A>>13][A&0x1FFF]); }
 #endif
 
 /** FAST_RDOP ************************************************/
