@@ -438,10 +438,9 @@ void
 psp_sdl_flip(void)
 {
   if(SDL_MUSTLOCK(ScreenSurface)) SDL_LockSurface(ScreenSurface);
-  int x, y;
   uint32_t *s = (uint32_t*)back_surface->pixels;
   uint32_t *d = (uint32_t*)ScreenSurface->pixels;
-  for(y = 0; y < 239; y++, s += 160, d += 320) { // double-line fix by pingflood, 2018
+  for(uint8_t y = 0; y < 239; y++, s += 160, d += 320) { // double-line fix by pingflood, 2018
     memcpy(d, s, 1280);
   }
   if(SDL_MUSTLOCK(ScreenSurface)) SDL_UnlockSurface(ScreenSurface);
