@@ -4,9 +4,14 @@
 # by pingflood; 2018
 #
 
-CHAINPREFIX=/opt/rs97-toolchain
-CROSS_COMPILE=$(CHAINPREFIX)/usr/bin/mipsel-linux-
-SYSROOT     := $(CHAINPREFIX)/usr/mipsel-buildroot-linux-uclibc/sysroot
+CHAINPREFIX := /opt/rs97-toolchain
+CROSS_COMPILE := $(CHAINPREFIX)/usr/bin/mipsel-linux-
+
+CC = $(CROSS_COMPILE)gcc
+CXX = $(CROSS_COMPILE)g++
+STRIP = $(CROSS_COMPILE)strip
+
+SYSROOT     := $(shell $(CC) --print-sysroot)
 
 MSX_VERSION=1.1.0
 
@@ -37,10 +42,6 @@ unzip.o \
 ioapi.o \
 sha1.o \
 psp_fmgr.o
-
-CC = $(CROSS_COMPILE)gcc
-CXX = $(CROSS_COMPILE)g++
-STRIP = $(CROSS_COMPILE)strip
 
 DEFAULT_CFLAGS = $(shell $(SDL_CONFIG) --cflags)
 
