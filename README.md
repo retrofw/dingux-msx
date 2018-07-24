@@ -9,7 +9,7 @@ YM2413/PSG/SCC emulation by Mitsutaka Okazaki (2001).
 Y8950 emulation          by Tatsuyuki Satoh (1999/2000).
 ```
 
-## Author of the Dingoo/Dingux port version 
+* Author of the Dingoo/Dingux port version 
 
 Ludovic.Jacomme also known as Zx-81 (zx81.zx81@gmail.com)
 
@@ -49,55 +49,55 @@ You can toggle between while playing inside the emulator using
 the two Dingux trigger keys.
 
 In the MSX emulator window 
-  
+	
 * Normal mapping :
-  
-    Dingux     MSX 
-    Y          Delete
-    X          Return
-    B          Space
-    A          Fire1
-    Up         Up
-    Down       Down
-    Left       Left
-    Right      Right
-    LTrigger   Toogle with L keyboard mapping
-    RTrigger   Toggle with R keyboard mapping
-  
+	
+		Dingux     MSX 
+		Y          Delete
+		X          Return
+		B          Space
+		A          Fire1
+		Up         Up
+		Down       Down
+		Left       Left
+		Right      Right
+		LTrigger   Toogle with L keyboard mapping
+		RTrigger   Toggle with R keyboard mapping
+
 * LTrigger mapping :
-  
-    Dingux     MSX 
-    Y          Hotkey FPS
-    X          Hotkey Load state
-    B          Hotkey Save state
-    A          Hotkey render
-    Up         Up
-    Down       Down
-    Left       Left
-    Right      Right
-  
+	
+		Dingux     MSX 
+		Y          Hotkey FPS
+		X          Hotkey Load state
+		B          Hotkey Save state
+		A          Hotkey render
+		Up         Up
+		Down       Down
+		Left       Left
+		Right      Right
+
 * RTrigger mapping :
-  
-    Dingux     MSX 
-    Y          Escape
-    X          Return
-    B          Hotkey auto-fire
-    A          Fire2
-    Up         Up
-    Down       Down
-    Left       Left
-    Right      Right
-  
-    Press Menu      to enter in emulator main menu.
-    Press Select    open/close the virtual keyboard
+	
+		Dingux     MSX 
+		Y          Escape
+		X          Return
+		B          Hotkey auto-fire
+		A          Fire2
+		Up         Up
+		Down       Down
+		Left       Left
+		Right      Right
+
+		Press Menu      to enter in emulator main menu.
+		Press Select    open/close the virtual keyboard
 
 * In the main menu
 
-    RTrigger   Reset the emulator
-    X          Go Up directory
-    B          Valid
-    A          Valid
-    Y          Go Back to the emulator window
+		RTrigger   Reset the emulator
+		X          Go Up directory
+		B          Valid
+		A          Valid
+		Y          Go Back to the emulator window
 
 The On-Screen Keyboard of "Danzel" and "Jeff Chen"
 
@@ -216,30 +216,30 @@ To find a new "poke address" you can proceed as follow :
 Let's say you're playing "1942" and you want to find the memory
 address where "number lives" is stored.
 
-  * Start a new game in 1942
-  * Enter in the cheat menu. 
-  * Choose Save Ram to save initial state of the memory. 
-  * Specify the number of lives you want to find in
-    "Scan Old Value" field.
-    (for 1942 the initial lives number is 4)
-  * Go back to the game and loose 1 life.
-  * Enter in the cheat menu.
-  * Specify the number of lives you want to find in
-    "Scan New Value" field.
-    (for 1942 the lives number is now 3)
-  * In Add Cheat you have many matching Addresses
-  * Then go back to the game and loose more lives
-    let's say up to 0.
-  * Enter in the cheat menu.
-  * Specify the number of lives you want to find in
-    "Scan New Value" field.
-    (for 1942 the lives number is now 0)
-   In Add Cheat you have now only one matching Address
-   Specify the Poke value you want (for example 4) 
-    and add the new cheat with this address / value.
-  * Try this cheat while restarting a new game and see 
-    if the life number is 4 or not. You will see that 
-    the good address is 2D2F.
+* Start a new game in 1942
+* Enter in the cheat menu. 
+* Choose Save Ram to save initial state of the memory. 
+* Specify the number of lives you want to find in
+	"Scan Old Value" field.
+	(for 1942 the initial lives number is 4)
+* Go back to the game and loose 1 life.
+* Enter in the cheat menu.
+* Specify the number of lives you want to find in
+	"Scan New Value" field.
+	(for 1942 the lives number is now 3)
+* In Add Cheat you have many matching Addresses
+* Then go back to the game and loose more lives
+	let's say up to 0.
+* Enter in the cheat menu.
+* Specify the number of lives you want to find in
+	"Scan New Value" field.
+	(for 1942 the lives number is now 0)
+ In Add Cheat you have now only one matching Address
+ Specify the Poke value you want (for example 4) 
+	and add the new cheat with this address / value.
+* Try this cheat while restarting a new game and see 
+	if the life number is 4 or not. You will see that 
+	the good address is 2D2F.
 
 The cheat is now activated in the cheat list 
 and you can save it using the "Save cheat" menu.
@@ -264,10 +264,10 @@ Display fps        : display real time fps value
 MSX version        : MSX version 1, 2 or 2+
 MSX Ram size       : memory size of MSX
 Render mode        : many render modes are available with different 
-                     geometry that should covered all games requirements
+										 geometry that should covered all games requirements
 V-Sync             : vertical synchronisation (slow down the emulator)
 Clock frequency    : Dingux clock frequency, by default the value is set to
-                     200Mhz, and should be enough for most of all games.
+										 200Mhz, and should be enough for most of all games.
 ```
 
 
