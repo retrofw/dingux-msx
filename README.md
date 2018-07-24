@@ -41,7 +41,7 @@ http://www.gp32x.com/
 
 ## CONTROL
 
-### - Virtual keyboard
+### Virtual keyboard
 
 In the emulator window, there are three different mapping 
 (standard, left trigger, and right Trigger mappings). 
@@ -51,7 +51,7 @@ the two Dingux trigger keys.
 In the MSX emulator window 
 	
 * Normal mapping :
-	
+
 		Dingux     MSX 
 		Y          Delete
 		X          Return
@@ -65,7 +65,7 @@ In the MSX emulator window
 		RTrigger   Toggle with R keyboard mapping
 
 * LTrigger mapping :
-	
+
 		Dingux     MSX 
 		Y          Hotkey FPS
 		X          Hotkey Load state
@@ -77,7 +77,7 @@ In the MSX emulator window
 		Right      Right
 
 * RTrigger mapping :
-	
+
 		Dingux     MSX 
 		Y          Escape
 		X          Return
