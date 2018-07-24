@@ -153,12 +153,12 @@ You must eject any present rom before starting a disk, or only the
 ROM will start instead of your disk image.
 
 
-## COMMENTS
+<!-- ## COMMENTS
 
 You can write your own comments for games using the "Comment" menu.  The first
 line of your comments would then be displayed in the file requester menu while
 selecting the given file name (snapshot, disk, keyboard, settings).
-
+ -->
 
 ## LOADING KEY MAPPING FILES
 
