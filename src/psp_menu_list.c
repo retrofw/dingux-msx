@@ -132,7 +132,7 @@ psp_display_screen_cheat_list(void)
   psp_sdl_blit_help();
 
   x      = 0;
-  y      = 5;
+  y      = 20;
   y_step = 10;
 
   cheat_line = psp_cheat_top;

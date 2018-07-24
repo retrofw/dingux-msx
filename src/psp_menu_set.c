@@ -122,7 +122,7 @@ psp_display_screen_settings_menu(void)
   psp_sdl_blit_help();
   
   x      = 10;
-  y      =  5;
+  y      = 20;
   y_step = 10;
   
   for (menu_id = 0; menu_id < MAX_MENU_SET_ITEM; menu_id++) {
