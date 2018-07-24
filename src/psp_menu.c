@@ -621,14 +621,8 @@ psp_main_menu(void)
 		} else
      if ((new_pad == GP2X_CTRL_LEFT ) || (new_pad == GP2X_CTRL_RIGHT))
     {
-      int step = 0;
-
-      if (new_pad & GP2X_CTRL_RIGHT) {
-        step = 1;
-      } else
-      if (new_pad & GP2X_CTRL_LEFT) {
-        step = -1;
-      }
+      int step = 1;
+      if (new_pad & GP2X_CTRL_LEFT) step = -1;
 
       switch (cur_menu_id ) 
       {

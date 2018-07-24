@@ -54,16 +54,16 @@ or implied, of Ludovic Jacomme.
 
 extern SDL_Surface *back_surface;
 
-# define MENU_JOY_ANALOG        0
-# define MENU_JOY_AUTOFIRE_T    1
-# define MENU_JOY_AUTOFIRE_M    2
-
-# define MENU_JOY_LOAD          3
-# define MENU_JOY_SAVE          4
-# define MENU_JOY_RESET         5
-# define MENU_JOY_BACK          6
-
-# define MAX_MENU_JOY_ITEM (MENU_JOY_BACK + 1)
+enum {
+  MENU_JOY_ANALOG,
+  MENU_JOY_AUTOFIRE_T,
+  MENU_JOY_AUTOFIRE_M,
+  MENU_JOY_LOAD,
+  MENU_JOY_SAVE,
+  MENU_JOY_RESET,
+  MENU_JOY_BACK,
+  MAX_MENU_JOY_ITEM
+};
 
   static menu_item_t menu_list[] =
   {
@@ -78,7 +78,7 @@ extern SDL_Surface *back_surface;
     { "Back to Menu"        }
   };
 
-  static int cur_menu_id = MENU_JOY_LOAD;
+  static int cur_menu_id = MENU_JOY_BACK;
 
   static int psp_reverse_analog    = 0;
   static int msx_auto_fire_period = 0;
@@ -300,28 +300,25 @@ psp_joystick_menu(void)
       psp_settings_menu_reset();
       end_menu = 1;
     } else
-    if ((new_pad == GP2X_CTRL_LEFT ) || 
-        (new_pad == GP2X_CTRL_RIGHT) ||
-        (new_pad == GP2X_CTRL_CROSS) || 
-        (new_pad == GP2X_CTRL_CIRCLE))
+    if ((new_pad == GP2X_CTRL_LEFT ) || (new_pad == GP2X_CTRL_RIGHT))
     {
-      int step = 0;
-
-      if (new_pad & GP2X_CTRL_RIGHT) {
-        step = 1;
-      } else
-      if (new_pad & GP2X_CTRL_LEFT) {
-        step = -1;
-      }
+      int step = 1;
+      if (new_pad & GP2X_CTRL_LEFT) step = -1;
 
       switch (cur_menu_id ) 
       {
-        case MENU_JOY_ANALOG     : psp_reverse_analog = ! psp_reverse_analog;
-        break;              
         case MENU_JOY_AUTOFIRE_T  : psp_joystick_menu_autofire( step );
+        break;              
+        case MENU_JOY_ANALOG     : psp_reverse_analog = ! psp_reverse_analog;
         break;              
         case MENU_JOY_AUTOFIRE_M  : msx_auto_fire_mode = ! msx_auto_fire_mode;
         break;              
+      }
+    }
+    if ((new_pad == GP2X_CTRL_CROSS) || (new_pad == GP2X_CTRL_CIRCLE))
+    {
+      switch (cur_menu_id ) 
+      {
         case MENU_JOY_LOAD       : psp_joystick_menu_load(FMGR_FORMAT_JOY);
                                    old_pad = new_pad = 0;
         break;              
@@ -330,7 +327,6 @@ psp_joystick_menu(void)
         break;                     
         case MENU_JOY_RESET      : psp_joystick_menu_reset();
         break;                     
-                                   
         case MENU_JOY_BACK       : end_menu = 1;
         break;                     
       }
