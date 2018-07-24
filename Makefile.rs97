@@ -15,7 +15,7 @@ SYSROOT     := $(shell $(CC) --print-sysroot)
 
 MSX_VERSION=1.1.0
 
-TARGET = src/dist/dingux-msx.dge
+TARGET = ./dingux-msx/dingux-msx.dge
 SDL_CONFIG = $(SYSROOT)/usr/bin/sdl-config
 OBJS = ./src/gp2x_psp.o \
 ./src/cpudingux.o \
