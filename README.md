@@ -52,8 +52,7 @@ In the MSX emulator window
   
 * Normal mapping :
   
-    Dingux        MSX 
-      
+    Dingux     MSX 
     Y          Delete
     X          Return
     B          Space
@@ -62,14 +61,12 @@ In the MSX emulator window
     Down       Down
     Left       Left
     Right      Right
-  
     LTrigger   Toogle with L keyboard mapping
     RTrigger   Toggle with R keyboard mapping
   
 * LTrigger mapping :
   
-    Dingux        MSX 
-      
+    Dingux     MSX 
     Y          Hotkey FPS
     X          Hotkey Load state
     B          Hotkey Save state
@@ -81,8 +78,7 @@ In the MSX emulator window
   
 * RTrigger mapping :
   
-    Dingux        MSX 
-      
+    Dingux     MSX 
     Y          Escape
     X          Return
     B          Hotkey auto-fire
@@ -98,7 +94,6 @@ In the MSX emulator window
 * In the main menu
 
     RTrigger   Reset the emulator
-
     X          Go Up directory
     B          Valid
     A          Valid
