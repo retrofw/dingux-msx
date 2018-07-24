@@ -161,7 +161,7 @@ psp_display_screen_kbd_menu(void)
   psp_sdl_blit_help();
 
   x      = 10;
-  y      = 20;
+  y      = 5;
   y_step = 10;
   
   for (menu_id = 0; menu_id < MAX_MENU_KBD_ITEM; menu_id++, y += y_step) 
@@ -220,13 +220,13 @@ psp_display_screen_kbd_menu(void)
       string_fill_with_space(buffer, 12);
       psp_sdl_back2_print(80, y, buffer, color);
 
-      // if (menu_id == MENU_KBD_JOY_RIGHT) {
-      //   y += y_step;
-      // }
+    }
+    if ((menu_id == MENU_KBD_JOY_RIGHT) || (menu_id == MENU_KBD_RESET)) {
+      y += y_step / 2;
     }
   }
 
-  psp_menu_display_save_name();
+  // psp_menu_display_save_name();
 }
 
 static void
