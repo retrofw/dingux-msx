@@ -264,10 +264,10 @@ Display fps        : display real time fps value
 MSX version        : MSX version 1, 2 or 2+
 MSX Ram size       : memory size of MSX
 Render mode        : many render modes are available with different 
-										 geometry that should covered all games requirements
+			geometry that should covered all games requirements
 V-Sync             : vertical synchronisation (slow down the emulator)
 Clock frequency    : Dingux clock frequency, by default the value is set to
-										 200Mhz, and should be enough for most of all games.
+			200Mhz, and should be enough for most of all games.
 ```
 
 
