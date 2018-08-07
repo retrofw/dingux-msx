@@ -18,12 +18,14 @@ typedef unsigned int   u32;
 # endif
 
 //LUDO:
-# define MSX_RENDER_FAST       0
-// # define MSX_RENDER_ZOOMED     1
-// # define MSX_RENDER_FULLSCREEN 2
-# define MSX_LAST_RENDER       1
-# define MSX_RENDER_NORMAL     2
-# define MSX_RENDER_FIT        3
+enum {
+MSX_RENDER_FAST,
+// MSX_RENDER_ZOOMED,
+// MSX_RENDER_FULLSCREEN,
+MSX_RENDER_NORMAL,
+MSX_RENDER_FIT,
+MSX_LAST_RENDER
+};
 
 # define MAX_PATH   256
 # define MSX_MAX_SAVE_STATE 5

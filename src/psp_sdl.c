@@ -414,18 +414,16 @@ psp_sdl_display_splash()
   psp_sdl_print(x, y, MSX_VERSION, col);
   psp_sdl_flip();
 
-  psp_sdl_blit_splash();
-  psp_sdl_print(x, y, MSX_VERSION, col);
-  psp_sdl_flip();
+  // psp_sdl_blit_splash();
+  // psp_sdl_print(x, y, MSX_VERSION, col);
+  // psp_sdl_flip();
 
-  SDL_Delay(1000);
-
-
-  while (index < 50) {
-    gp2xCtrlPeekBufferPositive(&c, 1);
-    if (c.Buttons & (GP2X_CTRL_START|GP2X_CTRL_CROSS)) break;
-    index++;
-  }
+  // SDL_Delay(100);
+  // while (index < 50) {
+  //   gp2xCtrlPeekBufferPositive(&c, 1);
+  //   if (c.Buttons & (GP2X_CTRL_START|GP2X_CTRL_CROSS)) break;
+  //   index++;
+  // }
 }
 
 void

@@ -102,14 +102,14 @@ msx_synchronize(void)
 
   u32 curclock = SDL_GetTicks();
 
-  // if (MSX.msx_speed_limiter) {
-  //   while (curclock < nextclock) {
-  //    curclock = SDL_GetTicks();
-  //   }
-  //   u32 f_period = 1000 / MSX.msx_speed_limiter;
-  //   nextclock += f_period;
-  //   if (nextclock < curclock) nextclock = curclock + f_period;
-  // }
+  if (MSX.msx_speed_limiter) {
+    while (curclock < nextclock) {
+     curclock = SDL_GetTicks();
+    }
+    u32 f_period = 1000 / MSX.msx_speed_limiter;
+    nextclock += f_period;
+    if (nextclock < curclock) nextclock = curclock + f_period;
+  }
 
   if (MSX.msx_view_fps) {
     cur_num_frame++;
@@ -125,7 +125,7 @@ int direct_mode = 0;
 void
 msx_set_direct_surface()
 {
-  XBuf = (ushort*)( (u8*)back_surface->pixels + (320 -MSX_WIDTH) + 6 * 2 * 320);
+  XBuf = (ushort*)( (u8*)back_surface->pixels + (320 - MSX_WIDTH) + 6 * 2 * 320);
   direct_mode = 1;
 }
 

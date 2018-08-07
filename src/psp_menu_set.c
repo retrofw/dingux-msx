@@ -55,17 +55,19 @@ or implied, of Ludovic Jacomme.
 extern SDL_Surface *back_surface;
 
 enum {
-  MENU_SET_SOUND        ,
-  MENU_SET_USE_2413     ,
-  MENU_SET_USE_8950     ,
-  MENU_SET_VOLUME       ,
-  MENU_SET_VIDEO        ,
-  MENU_SET_SPEED_LIMIT  ,
+  MENU_SET_RENDER       ,
   MENU_SET_SKIP_FPS     ,
   MENU_SET_VIEW_FPS     ,
+  MENU_SET_SPEED_LIMIT  ,
+  MENU_SET_VIDEO        ,
+
+  MENU_SET_SOUND        ,
+  MENU_SET_VOLUME       ,
+  MENU_SET_USE_2413     ,
+  MENU_SET_USE_8950     ,
+
   MENU_SET_MSX_VERSION  ,
   MENU_SET_MSX_RAM_PAGES,
-  // MENU_SET_RENDER       ,
   // MENU_SET_CLOCK        ,
   MENU_SET_LOAD         ,
   MENU_SET_SAVE         ,
@@ -76,17 +78,17 @@ enum {
 
   static menu_item_t menu_list[] =
   {
+    { "Render mode        :"},
+    { "Frameskip          :"},
+    { "Show FPS           :"},
+    { "Speed limiter      :"},
+    { "Video Mode         :"},
     { "Sound enabled      :"},
+    { "Sound Volume       :"},
     { "Music FM-PAC       :"},
     { "Music Module       :"},
-    { "Sound Volume       :"},
-    { "Video Mode         :"},
-    { "Speed limiter      :"},
-    { "Skip frame         :"},
-    { "Display fps        :"},
     { "MSX version        :"},
     { "MSX ram size       :"},
-    // { "Render mode        :"},
     // { "Clock frequency    :"},
     { "Load settings"       },
     { "Save settings"       },
@@ -131,37 +133,25 @@ psp_display_screen_settings_menu(void)
 
     psp_sdl_back2_print(x, y, menu_list[menu_id].title, color);
 
-    if (menu_id == MENU_SET_SOUND) {
-      if (msx_snd_enable) strcpy(buffer,"yes");
-      else                 strcpy(buffer,"no ");
-      string_fill_with_space(buffer, 4);
+    if (menu_id == MENU_SET_RENDER) {
+
+      if (msx_render_mode == MSX_RENDER_FAST) strcpy(buffer, "fast");
+      else 
+      if (msx_render_mode == MSX_RENDER_NORMAL) strcpy(buffer, "normal");
+      else
+      if (msx_render_mode == MSX_RENDER_FIT) strcpy(buffer, "fit");
+
+      string_fill_with_space(buffer, 13);
       psp_sdl_back2_print(140, y, buffer, color);
     } else
-    if (menu_id == MENU_SET_USE_8950) {
-      if (msx_use_8950) strcpy(buffer,"yes");
-      else              strcpy(buffer,"no ");
-      string_fill_with_space(buffer, 4);
-      psp_sdl_back2_print(140, y, buffer, color);
-    } else
-    if (menu_id == MENU_SET_USE_2413) {
-      if (msx_use_2413) strcpy(buffer,"yes");
-      else              strcpy(buffer,"no ");
+    if (menu_id == MENU_SET_SKIP_FPS) {
+      sprintf(buffer,"%d", msx_skip_fps);
       string_fill_with_space(buffer, 4);
       psp_sdl_back2_print(140, y, buffer, color);
     } else
     if (menu_id == MENU_SET_VIEW_FPS) {
       if (msx_view_fps) strcpy(buffer,"yes");
       else                strcpy(buffer,"no ");
-      string_fill_with_space(buffer, 4);
-      psp_sdl_back2_print(140, y, buffer, color);
-    } else
-    if (menu_id == MENU_SET_VOLUME) {
-      sprintf(buffer,"%d", psp_sound_volume);
-      string_fill_with_space(buffer, 7);
-      psp_sdl_back2_print(140, y, buffer, color);
-    } else
-    if (menu_id == MENU_SET_SKIP_FPS) {
-      sprintf(buffer,"%d", msx_skip_fps);
       string_fill_with_space(buffer, 4);
       psp_sdl_back2_print(140, y, buffer, color);
     } else
@@ -177,6 +167,29 @@ psp_display_screen_settings_menu(void)
       string_fill_with_space(buffer, 7);
       psp_sdl_back2_print(140, y, buffer, color);
     } else
+    if (menu_id == MENU_SET_SOUND) {
+      if (msx_snd_enable) strcpy(buffer,"yes");
+      else                 strcpy(buffer,"no ");
+      string_fill_with_space(buffer, 4);
+      psp_sdl_back2_print(140, y, buffer, color);
+    } else
+    if (menu_id == MENU_SET_VOLUME) {
+      sprintf(buffer,"%d", psp_sound_volume);
+      string_fill_with_space(buffer, 7);
+      psp_sdl_back2_print(140, y, buffer, color);
+    } else
+    if (menu_id == MENU_SET_USE_8950) {
+      if (msx_use_8950) strcpy(buffer,"yes");
+      else              strcpy(buffer,"no ");
+      string_fill_with_space(buffer, 4);
+      psp_sdl_back2_print(140, y, buffer, color);
+    } else
+    if (menu_id == MENU_SET_USE_2413) {
+      if (msx_use_2413) strcpy(buffer,"yes");
+      else              strcpy(buffer,"no ");
+      string_fill_with_space(buffer, 4);
+      psp_sdl_back2_print(140, y, buffer, color);
+    } else
     if (menu_id == MENU_SET_MSX_VERSION) {
       if (msx_version == 0) strcpy(buffer, "MSX1");
       else
@@ -189,26 +202,15 @@ psp_display_screen_settings_menu(void)
       sprintf(buffer, "%d kB", msx_ram_pages * 16);
       string_fill_with_space(buffer, 10);
       psp_sdl_back2_print(140, y, buffer, color);
-      y += y_step;
-    } else
-    // if (menu_id == MENU_SET_RENDER) {
-
-    //   if (msx_render_mode == MSX_RENDER_FAST) strcpy(buffer, "fast");
-    //   else 
-    //   if (msx_render_mode == MSX_RENDER_NORMAL) strcpy(buffer, "normal");
-    //   else
-    //   if (msx_render_mode == MSX_RENDER_FIT) strcpy(buffer, "fit");
-
-    //   string_fill_with_space(buffer, 13);
-    //   psp_sdl_back2_print(140, y, buffer, color);
-    // } else
+    }
+    // else
     // if (menu_id == MENU_SET_CLOCK) {
     //   sprintf(buffer,"%d", psp_cpu_clock);
     //   string_fill_with_space(buffer, 4);
     //   psp_sdl_back2_print(140, y, buffer, color);
     //   y += y_step;
     // } else
-    if (menu_id == MENU_SET_RESET) {
+    if (menu_id == MENU_SET_VIDEO || menu_id == MENU_SET_USE_8950 || menu_id == MENU_SET_MSX_RAM_PAGES || menu_id == MENU_SET_RESET) {
       y += y_step;
     }
 
@@ -293,13 +295,13 @@ psp_settings_menu_volume(int step)
 static void
 psp_settings_menu_render(int step)
 {
-  msx_render_mode = MSX_RENDER_FAST; return;
+  // msx_render_mode = MSX_RENDER_FAST; return;
   if (step > 0) {
-    if (msx_render_mode < MSX_LAST_RENDER) msx_render_mode++;
-    else                                   msx_render_mode = 0;
+    msx_render_mode++;
+    if (msx_render_mode >= MSX_LAST_RENDER) msx_render_mode = 0;
   } else {
-    if (msx_render_mode > 0) msx_render_mode--;
-    else                     msx_render_mode = MSX_LAST_RENDER;
+    msx_render_mode--;
+    if (msx_render_mode < 0) msx_render_mode = MSX_LAST_RENDER - 1;
   }
 }
 
@@ -500,17 +502,10 @@ psp_settings_menu(void)
         break;
         case MENU_SET_SKIP_FPS   : psp_settings_menu_skip_fps( step );
         break;
-        // case MENU_SET_RENDER     : psp_settings_menu_render( step );
-        // break;              
+        case MENU_SET_RENDER     : psp_settings_menu_render( step );
+        break;              
         // case MENU_SET_CLOCK      : psp_settings_menu_clock( step );
         // break;
-      }
-
-    } else
-    if ((new_pad == GP2X_CTRL_CROSS) || (new_pad == GP2X_CTRL_CIRCLE))
-    {
-      switch (cur_menu_id ) 
-      {
         case MENU_SET_SOUND      : msx_snd_enable = ! msx_snd_enable;
         break;              
         case MENU_SET_USE_2413   : msx_use_2413 = ! msx_use_2413;
@@ -521,6 +516,13 @@ psp_settings_menu(void)
         break;              
         case MENU_SET_VIDEO      : msx_ntsc = ! msx_ntsc;
         break;
+      }
+
+    } else
+    if ((new_pad == GP2X_CTRL_CIRCLE))
+    {
+      switch (cur_menu_id ) 
+      {
         case MENU_SET_LOAD       : psp_settings_menu_load(FMGR_FORMAT_SET);
                                    old_pad = new_pad = 0;
         break;              
@@ -551,7 +553,7 @@ psp_settings_menu(void)
       /* Cancel */
       end_menu = -1;
     } else 
-    if(new_pad & GP2X_CTRL_SELECT) {
+    if((new_pad & GP2X_CTRL_CROSS) || (new_pad & GP2X_CTRL_SELECT)) {
       /* Back to MSX */
       end_menu = 1;
     }
