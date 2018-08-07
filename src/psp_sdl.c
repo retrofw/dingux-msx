@@ -636,18 +636,7 @@ int
 psp_sdl_save_thumb_png(SDL_Surface* my_surface, char* filename)
 {
   /* First dump blit_surface to my_surface */
-  int x;
-  int y;
-  u16* src_pixel = (u16*)blit_surface->pixels;
-  u16* dst_pixel = (u16*)my_surface->pixels;
-  u16* scan_src_pixel = 0;
-
-  for (y = 0; y < SNAP_HEIGHT; y++) {
-    scan_src_pixel = src_pixel + (MSX_WIDTH * y * 3);
-    for (x = 0; x < SNAP_WIDTH; x++) {
-      *dst_pixel++ = scan_src_pixel[x * 3];
-    }
-  }
+  SDL_SoftStretch(blit_surface, NULL, my_surface, NULL);
   /* Then save thumb in file */
   return psp_sdl_save_png(my_surface, filename);
 }

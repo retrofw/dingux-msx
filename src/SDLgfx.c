@@ -142,14 +142,17 @@ msx_save_back_to_blit()
   int x; int y;
   /* Bakcup direct back_surface to blit_surface for thumb images ! */
   if (direct_mode) {
-    u16* pt_src = (u16*)XBuf;
-    u16* pt_dst = (u16*)blit_surface->pixels;
-    for (y = 0; y < MSX_HEIGHT; y++) {
-      for (x = 0; x < MSX_WIDTH; x++) {
-        *pt_dst++ = pt_src[x];
-      }
-      pt_src += PSP_LINE_SIZE;
-    }
+    u16 *s = (u16*)XBuf;
+    u16 *d = (u16*)blit_surface->pixels;
+    memmove(d, s, MSX_WIDTH * MSX_HEIGHT * sizeof(u16));
+    // u16* pt_src = (u16*)XBuf;
+    // u16* pt_dst = (u16*)blit_surface->pixels;
+    // for (y = 0; y < MSX_HEIGHT; y++) {
+    //   for (x = 0; x < MSX_WIDTH; x++) {
+    //     *pt_dst++ = pt_src[x];
+    //   }
+    //   pt_src += PSP_LINE_SIZE / 2; // rs97 fix
+    // }
   }
 }
 
