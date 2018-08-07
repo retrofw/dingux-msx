@@ -237,7 +237,7 @@ psp_menu_cheat_list(int cheat_id)
       /* Exit ! */
       psp_sdl_exit(0);
     } else
-    if(new_pad & GP2X_CTRL_SELECT) {
+    if((new_pad & GP2X_CTRL_CROSS) || (new_pad & GP2X_CTRL_SELECT)) {
       /* Back to Main menu */
       end_menu = 1;
     } else
@@ -260,8 +260,7 @@ psp_menu_cheat_list(int cheat_id)
       }
 
     } else
-    if ((new_pad & GP2X_CTRL_CROSS ) || 
-        (new_pad & GP2X_CTRL_CIRCLE)) {
+    if ((new_pad & GP2X_CTRL_CIRCLE)) {
       if (psp_apply_current_cheat_list(cheat_id)) {
         end_menu = 2;
       }

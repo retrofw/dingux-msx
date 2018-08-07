@@ -603,7 +603,7 @@ psp_cheat_menu(void)
         break;
       }
     } else
-    if ((new_pad == GP2X_CTRL_CROSS) || (new_pad == GP2X_CTRL_CIRCLE))
+    if ((new_pad == GP2X_CTRL_CIRCLE))
     {
       int step = 1;
       if (new_pad & GP2X_CTRL_CIRCLE) step = -1;
@@ -649,7 +649,7 @@ psp_cheat_menu(void)
       /* Cancel */
       end_menu = -1;
     } else 
-    if(new_pad & GP2X_CTRL_SELECT) {
+    if((new_pad & GP2X_CTRL_CROSS) || (new_pad & GP2X_CTRL_SELECT)) {
       /* Back to MENU */
       end_menu = 1;
     }

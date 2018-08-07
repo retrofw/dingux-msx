@@ -385,22 +385,23 @@ psp_settings_menu_exit(void)
 {
   gp2xCtrlData c;
 
-  psp_display_screen_settings_menu();
-  psp_sdl_back2_print(170, 110, "press X to confirm !", PSP_MENU_WARNING_COLOR);
-  psp_sdl_flip();
+  // psp_display_screen_settings_menu();
+  // psp_sdl_back2_print(170, 110, "press X to confirm !", PSP_MENU_WARNING_COLOR);
+  // psp_sdl_flip();
 
-  psp_kbd_wait_no_button();
+  // psp_kbd_wait_no_button();
 
-  do
-  {
-    gp2xCtrlReadBufferPositive(&c, 1);
-    c.Buttons &= PSP_ALL_BUTTON_MASK;
+  // do
+  // {
+  //   gp2xCtrlReadBufferPositive(&c, 1);
+  //   c.Buttons &= PSP_ALL_BUTTON_MASK;
 
-    if (c.Buttons & GP2X_CTRL_CROSS) psp_sdl_exit(0);
+    // if (c.Buttons & GP2X_CTRL_CROSS) 
+    psp_sdl_exit(0);
 
-  } while (c.Buttons == 0);
+  // } while (c.Buttons == 0);
 
-  psp_kbd_wait_no_button();
+  // psp_kbd_wait_no_button();
 
   return 0;
 }

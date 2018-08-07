@@ -164,7 +164,7 @@ psp_display_screen_menu(void)
     if (cur_menu_id == menu_id) {
       color = PSP_MENU_SEL_COLOR;
       if (cur_menu_id == MENU_LOAD_SLOT) color = PSP_MENU_SEL2_COLOR;
-      else if (cur_menu_id == MENU_DEL_SLOT)  color = PSP_MENU_WARNING_COLOR;
+      else if (cur_menu_id == MENU_DEL_SLOT || cur_menu_id == MENU_EXIT) color = PSP_MENU_WARNING_COLOR;
     }
     // if (menu_id == MENU_HELP) color = PSP_MENU_GREEN_COLOR;
 
@@ -505,28 +505,28 @@ psp_main_menu_exit(void)
 {
   gp2xCtrlData c;
 
-  psp_display_screen_menu();
-  psp_sdl_back2_print( 120, 100, "press B to confirm !", PSP_MENU_WARNING_COLOR);
-  psp_sdl_flip();
+  // psp_display_screen_menu();
+  // psp_sdl_back2_print( 120, 100, "press B to confirm !", PSP_MENU_WARNING_COLOR);
+  // psp_sdl_flip();
 
-  psp_kbd_wait_no_button();
+  // psp_kbd_wait_no_button();
 
-  do
-  {
-    gp2xCtrlReadBufferPositive(&c, 1);
-    c.Buttons &= PSP_ALL_BUTTON_MASK;
+  // do
+  // {
+  //   gp2xCtrlReadBufferPositive(&c, 1);
+  //   c.Buttons &= PSP_ALL_BUTTON_MASK;
 
-    if (c.Buttons & GP2X_CTRL_CROSS) {
+  //   if (c.Buttons & GP2X_CTRL_CROSS) {
       psp_sdl_clear_screen(0);
       psp_sdl_flip();
       psp_sdl_clear_screen(0);
       psp_sdl_flip();
       psp_sdl_exit(0);
-    }
+  //   }
 
-  } while (c.Buttons == 0);
+  // } while (c.Buttons == 0);
 
-  psp_kbd_wait_no_button();
+  // psp_kbd_wait_no_button();
 
   return 0;
 }
@@ -637,7 +637,7 @@ psp_main_menu(void)
         // break;              
       }
     } else 
-    if ( (new_pad == GP2X_CTRL_CROSS) || (new_pad == GP2X_CTRL_CIRCLE))
+    if ((new_pad == GP2X_CTRL_CIRCLE))
     {
 	  switch (cur_menu_id )
 		  {
@@ -722,7 +722,7 @@ psp_main_menu(void)
 		if(new_pad & GP2X_CTRL_SQUARE) {
 		  end_menu = -1;
 		} else
-		if(new_pad & GP2X_CTRL_SELECT) {
+		if((new_pad & GP2X_CTRL_CROSS) || (new_pad & GP2X_CTRL_SELECT)) {
 		  end_menu = 1;
 		}
   }

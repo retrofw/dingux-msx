@@ -315,7 +315,7 @@ psp_joystick_menu(void)
         break;              
       }
     }
-    if ((new_pad == GP2X_CTRL_CROSS) || (new_pad == GP2X_CTRL_CIRCLE))
+    if ((new_pad == GP2X_CTRL_CIRCLE))
     {
       switch (cur_menu_id ) 
       {
@@ -348,7 +348,7 @@ psp_joystick_menu(void)
       /* Cancel */
       end_menu = -1;
     } else 
-    if(new_pad & GP2X_CTRL_SELECT) {
+    if((new_pad & GP2X_CTRL_CROSS) || (new_pad & GP2X_CTRL_SELECT)) {
       /* Back to MSX */
       end_menu = 1;
     }
