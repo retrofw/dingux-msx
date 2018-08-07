@@ -80,7 +80,7 @@ enum {
   MENU_SETTINGS,
 
   MENU_RESET,
-  MENU_BACK,
+  // MENU_BACK,
 
   MENU_EXIT,
 
@@ -110,12 +110,12 @@ enum {
     { "Settings" },
 
     { "Reset MSX" },
-    { "Back to MSX" },
+    // { "Back to MSX" },
 
     { "Exit" }
   };
 
-  static int cur_menu_id = MENU_BACK;
+  static int cur_menu_id = MENU_LOAD_SLOT;
   static int cur_slot    = 0;
 
 void
@@ -191,7 +191,7 @@ psp_display_screen_menu(void)
         case MENU_DEL_SLOT:
         case MENU_EJECT_ROM:
         case MENU_SETTINGS:
-        case MENU_BACK:
+        case MENU_RESET:
           y += y_step;
           break;
     }
@@ -695,8 +695,8 @@ psp_main_menu(void)
 								  end_menu = 1;
 			break;
 
-			case MENU_BACK      : end_menu = 1;
-			break;
+			// case MENU_BACK      : end_menu = 1;
+			// break;
 
 			case MENU_EXIT      : psp_main_menu_exit();
 			break;
