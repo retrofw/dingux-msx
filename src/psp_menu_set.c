@@ -134,13 +134,12 @@ psp_display_screen_settings_menu(void)
     psp_sdl_back2_print(x, y, menu_list[menu_id].title, color);
 
     if (menu_id == MENU_SET_RENDER) {
-
-      if (msx_render_mode == MSX_RENDER_FAST) strcpy(buffer, "fast");
-      else 
-      if (msx_render_mode == MSX_RENDER_NORMAL) strcpy(buffer, "normal");
-      else
-      if (msx_render_mode == MSX_RENDER_FIT) strcpy(buffer, "fit");
-
+      // if (msx_render_mode == MSX_RENDER_NORMAL) strcpy(buffer, "normal");
+      // else 
+      if (msx_render_mode == MSX_RENDER_FIT) strcpy(buffer, "fit width");
+      else if (msx_render_mode == MSX_RENDER_ZOOM) strcpy(buffer, "zoom");
+      else if (msx_render_mode == MSX_RENDER_FULL) strcpy(buffer, "full");
+      else /*if (msx_render_mode == MSX_RENDER_FAST)*/ strcpy(buffer, "normal");
       string_fill_with_space(buffer, 13);
       psp_sdl_back2_print(140, y, buffer, color);
     } else

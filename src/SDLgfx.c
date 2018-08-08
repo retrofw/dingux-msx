@@ -142,24 +142,24 @@ msx_save_back_to_blit()
   int x; int y;
   /* Bakcup direct back_surface to blit_surface for thumb images ! */
   if (direct_mode) {
-    u16 *s = (u16*)XBuf;
-    u16 *d = (u16*)blit_surface->pixels;
-    memmove(d, s, MSX_WIDTH * MSX_HEIGHT * sizeof(u16));
-    // u16* pt_src = (u16*)XBuf;
-    // u16* pt_dst = (u16*)blit_surface->pixels;
-    // for (y = 0; y < MSX_HEIGHT; y++) {
-    //   for (x = 0; x < MSX_WIDTH; x++) {
-    //     *pt_dst++ = pt_src[x];
-    //   }
-    //   pt_src += PSP_LINE_SIZE / 2; // rs97 fix
-    // }
+    // u16 *s = (u16*)XBuf;
+    // u16 *d = (u16*)blit_surface->pixels;
+    // memmove(d, s, MSX_WIDTH * MSX_HEIGHT * sizeof(u16));
+    u16* pt_src = (u16*)XBuf;
+    u16* pt_dst = (u16*)blit_surface->pixels;
+    for (y = 0; y < MSX_HEIGHT; y++) {
+      for (x = 0; x < MSX_WIDTH; x++) {
+        *pt_dst++ = pt_src[x];
+      }
+      pt_src += PSP_LINE_SIZE; // rs97 fix
+    }
   }
 }
 
 void
 msx_change_render_mode(int new_render_mode)
 {
-  if (new_render_mode >= MSX_RENDER_NORMAL) {
+  if (new_render_mode > MSX_RENDER_FAST) {
     msx_set_blit_surface();
   } else {
     msx_set_direct_surface();
@@ -293,10 +293,10 @@ PutImage_fit_width(void)
   int x_d, x_s;
   int y_s;
   int y;
-  short *ptr_dst = back_surface->pixels;
+  short *ptr_dst = back_surface->pixels + (PSP_SDL_SCREEN_HEIGHT - MSX_HEIGHT) * 320;
   short *ptr_src = XBuf;
 
-  for  (y = 0; y < SCR_HEIGHT; y++) {
+  for (y = 0; y < SCR_HEIGHT; y++) {
     for (x_d = 0; x_d < 320; x_d++) {
       x_s = 16 + (((x_d << 1) + x_d) >> 2);
       ptr_dst[x_d] = ptr_src[x_s];
@@ -305,6 +305,158 @@ PutImage_fit_width(void)
     ptr_dst += 320;
   }
 }
+
+
+#define COLAVG(C1,C2) ((((C1&0xF800)>>1)+((C2&0xF800)>>1))&0xF800) | \
+           ((((C1&0x07E0)+(C2&0x07E0))>>1)&0x07E0) | \
+           ((((C1&0x001F)+(C2&0x001F))>>1)&0x001F);
+
+static inline void
+PutImage_zoomed(void)
+{
+  int x;
+  int y;
+  word w, wa, wb, wc;
+  short *p, *prev, *next;
+  short *ptr_dst = back_surface->pixels;
+  short *ptr_src = XBuf;
+
+  for (y = 0; y < SCR_HEIGHT; y++) {
+
+    if ((y+1)%19)
+    {
+      p=ptr_dst;
+      for (x = 0; x < SCR_WIDTH; x+=6) { // Normal line
+        *p++=ptr_src[x+0];
+        *p++=ptr_src[x+1];
+        wa  =ptr_src[x+2];
+        wb  =ptr_src[x+3];
+        *p++=wa;
+        *p++=COLAVG(wa, wb);
+        *p++=wb;
+        *p++=ptr_src[x+4];
+        *p++=ptr_src[x+5];
+      }
+    }
+    else
+    {
+      prev=ptr_dst-320;
+      next=ptr_dst+320;
+      p=ptr_dst;
+      for (x = 0; x < SCR_WIDTH; x+=6) { // Interpolated line
+        wa=ptr_src[x+0];
+        *next++=wa;
+        w=*prev++;
+        *p++=COLAVG(w, wa);
+
+        wa=ptr_src[x+1];
+        *next++=wa;
+        w=*prev++;
+        *p++=COLAVG(w, wa);
+
+        wa=ptr_src[x+2];
+        wb=ptr_src[x+3];
+        wc=COLAVG(wa, wb);
+
+        *next++=wa;
+        w=*prev++;
+        *p++=COLAVG(w, wa);
+
+        *next++=wc;
+        w=*prev++;
+        *p++=COLAVG(w, wc);
+
+        *next++=wb;
+        w=*prev++;
+        *p++=COLAVG(w, wb);
+
+        wa=ptr_src[x+4];
+        *next++=wa;
+        w=*prev++;
+        *p++=COLAVG(w, wa);
+
+        wa=ptr_src[x+5];
+        *next++=wa;
+        w=*prev++;
+        *p++=COLAVG(w, wa);
+      }
+      ptr_dst += 320;
+    }
+    ptr_src += SCR_WIDTH;
+    ptr_dst += 320;
+  }
+}
+
+
+static inline void
+PutImage_fullscreen(void)
+{
+  int x, y, max_y, mod_y;
+  word w, wa, wb, wc;
+  short *prev, *next;
+  short *ptr_dst = back_surface->pixels;
+  short *ptr_src = XBuf;
+
+  if (ScanLines212) {
+    max_y = 214; mod_y = 8; // 2 extra lines (border)
+    ptr_src += 8 + (7 * SCR_WIDTH);
+  } else {
+    max_y = 192; mod_y = 4;
+    ptr_src += 8 + (18 * SCR_WIDTH);
+  }
+
+  for (y = 0; y < max_y; y++) {
+
+    if ((y+1)%mod_y)
+    {
+      for (x = 0; x < 256; x+=4) { // Normal line
+        *ptr_dst++=ptr_src[x+0];
+        wa        =ptr_src[x+1];
+        wb        =ptr_src[x+2];
+        *ptr_dst++=wa;
+        *ptr_dst++=COLAVG(wa, wb);
+        *ptr_dst++=wb;
+        *ptr_dst++=ptr_src[x+3];
+      }
+    }
+    else
+    {
+      prev=ptr_dst-320;
+      next=ptr_dst+320;
+      for (x = 0; x < 256; x+=4) { // Interpolated line
+
+        wa=ptr_src[x+0];
+        *next++=wa;
+        w=*prev++;
+        *ptr_dst++=COLAVG(w, wa);
+
+        wa=ptr_src[x+1];
+        wb=ptr_src[x+2];
+        wc=COLAVG(wa, wb);
+
+        *next++=wa;
+        w=*prev++;
+        *ptr_dst++=COLAVG(w, wa);
+
+        *next++=wc;
+        w=*prev++;
+        *ptr_dst++=COLAVG(w, wc);
+
+        *next++=wb;
+        w=*prev++;
+        *ptr_dst++=COLAVG(w, wb);
+
+        wa=ptr_src[x+3];
+        *next++=wa;
+        w=*prev++;
+        *ptr_dst++=COLAVG(w, wa);
+      }
+      ptr_dst=next;
+    }
+    ptr_src+=SCR_WIDTH;
+  }
+}
+
 
 void
 MsxKeyUp(int index, int bit_mask)
@@ -377,11 +529,15 @@ void RefreshScreen(void)
 
     MSX.psp_skip_cur_frame = MSX.psp_skip_max_frame;
 
-    if (MSX.msx_render_mode != MSX_RENDER_FAST) {
+    // if (MSX.msx_render_mode != MSX_RENDER_FAST) {
 
-      if (MSX.msx_render_mode == MSX_RENDER_NORMAL) PutImage_normal(); 
-      else /* if (MSX.msx_render_mode == MSX_RENDER_FIT   ) */ PutImage_fit_width(); 
-    }
+    //   if (MSX.msx_render_mode == MSX_RENDER_NORMAL) PutImage_normal(); 
+    //   else /* if (MSX.msx_render_mode == MSX_RENDER_FIT   ) */ PutImage_fit_width(); 
+    // }
+    if (MSX.msx_render_mode == MSX_RENDER_FIT) PutImage_fit_width();
+    else if (MSX.msx_render_mode == MSX_RENDER_ZOOM) PutImage_zoomed();
+    else if (MSX.msx_render_mode == MSX_RENDER_FULL) PutImage_fullscreen();
+    else /*if (MSX.msx_render_mode == MSX_RENDER_FAST) */ msx_set_direct_surface();
 
     if (psp_kbd_is_danzeff_mode()) {
       danzeff_moveTo(-30, -75);
@@ -399,9 +555,6 @@ void RefreshScreen(void)
     }
     psp_sdl_flip();
 
-    if (MSX.msx_render_mode == MSX_RENDER_FAST) {
-      msx_set_direct_surface();
-    }
   
     if (psp_screenshot_mode) {
       psp_screenshot_mode--;
