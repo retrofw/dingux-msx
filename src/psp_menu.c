@@ -124,7 +124,7 @@ psp_menu_display_save_name()
   char buffer[128];
   int Length;
 
-  snprintf(buffer, 120, "%s", MSX.msx_save_name);
+  snprintf(buffer, 50, "%s", MSX.msx_save_name);
   Length = strlen(buffer);
   psp_sdl_back2_print(10, 5, buffer, PSP_MENU_TEXT2_COLOR);
 }
