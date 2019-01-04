@@ -1,0 +1,10 @@
+Package: dingux-msx
+Version: 
+Description: RetroGame port of Dingoo's fMSX
+Section: emus
+Priority: optional
+Maintainer: pingflood
+Architecture: mipsel
+Homepage: https://github.com/pingflood/dingux-msx
+Depends:
+Source: https://github.com/pingflood/dingux-msx
