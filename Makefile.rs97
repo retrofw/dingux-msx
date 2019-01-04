@@ -4,7 +4,7 @@
 # by pingflood; 2018
 #
 
-CHAINPREFIX := /opt/rs97-toolchain
+CHAINPREFIX := /opt/mipsel-linux-uclibc
 CROSS_COMPILE := $(CHAINPREFIX)/usr/bin/mipsel-linux-
 
 CC = $(CROSS_COMPILE)gcc
@@ -72,8 +72,16 @@ CFLAGS = $(DEFAULT_CFLAGS) $(MORE_CFLAGS)
 $(TARGET): $(OBJS)
 	$(CC) $(LDFLAGS) $(CFLAGS) $(OBJS) $(LIBS) -o $(TARGET) && $(STRIP) $(TARGET)
 
-#install: $(TARGET)
-#	cp $< /media/dingux/local/emulators/dingux-msx/
+ipk: $(TARGET)
+	@rm -rf /tmp/.dingux-msx-ipk/ && mkdir -p /tmp/.dingux-msx-ipk/root/home/retrofw/emus/dingux-msx /tmp/.dingux-msx-ipk/root/home/retrofw/apps/gmenu2x/sections/emulators
+	@cp -r dingux-msx/*.rom dingux-msx/dingux-msx.dge dingux-msx/dingux-msx.man.txt dingux-msx/dingux-msx.png dingux-msx/splash.png dingux-msx/thumb.png dingux-msx/graphics /tmp/.dingux-msx-ipk/root/home/retrofw/emus/dingux-msx
+	@cd /tmp/.dingux-msx-ipk/root/home/retrofw/emus/dingux-msx && mkdir cht disk joy kbd roms save scr set txt
+	@cp dingux-msx/dingux-msx.lnk /tmp/.dingux-msx-ipk/root/home/retrofw/apps/gmenu2x/sections/emulators
+	@sed "s/^Version:.*/Version: $$(date +%Y%m%d)/" dingux-msx/control > /tmp/.dingux-msx-ipk/control
+	@tar --owner=0 --group=0 -czvf /tmp/.dingux-msx-ipk/control.tar.gz -C /tmp/.dingux-msx-ipk/ control
+	@tar --owner=0 --group=0 -czvf /tmp/.dingux-msx-ipk/data.tar.gz -C /tmp/.dingux-msx-ipk/root/ .
+	@echo 2.0 > /tmp/.dingux-msx-ipk/debian-binary
+	@ar r dingux-msx/dingux-msx.ipk /tmp/.dingux-msx-ipk/control.tar.gz /tmp/.dingux-msx-ipk/data.tar.gz /tmp/.dingux-msx-ipk/debian-binary
 
 clean:
 	rm -f $(OBJS) $(TARGET)
