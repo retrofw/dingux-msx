@@ -1,2 +1,3 @@
 /src/*.o
 /dingux-msx/dingux-msx.dge
+*.ipk
