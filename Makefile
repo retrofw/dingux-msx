@@ -73,10 +73,11 @@ $(TARGET): $(OBJS)
 	$(CC) $(LDFLAGS) $(CFLAGS) $(OBJS) $(LIBS) -o $(TARGET) && $(STRIP) $(TARGET)
 
 ipk: $(TARGET)
-	@rm -rf /tmp/.dingux-msx-ipk/ && mkdir -p /tmp/.dingux-msx-ipk/root/home/retrofw/emus/dingux-msx /tmp/.dingux-msx-ipk/root/home/retrofw/apps/gmenu2x/sections/emulators
+	@rm -rf /tmp/.dingux-msx-ipk/ && mkdir -p /tmp/.dingux-msx-ipk/root/home/retrofw/emus/dingux-msx /tmp/.dingux-msx-ipk/root/home/retrofw/apps/gmenu2x/sections/emulators /tmp/.dingux-msx-ipk/root/home/retrofw/apps/gmenu2x/sections/systems
 	@cp -r dingux-msx/*.rom dingux-msx/dingux-msx.dge dingux-msx/dingux-msx.man.txt dingux-msx/dingux-msx.png dingux-msx/splash.png dingux-msx/thumb.png dingux-msx/graphics /tmp/.dingux-msx-ipk/root/home/retrofw/emus/dingux-msx
 	@cd /tmp/.dingux-msx-ipk/root/home/retrofw/emus/dingux-msx && mkdir cht disk joy kbd roms save scr set txt
 	@cp dingux-msx/dingux-msx.lnk /tmp/.dingux-msx-ipk/root/home/retrofw/apps/gmenu2x/sections/emulators
+	@cp dingux-msx/msx.dingux-msx.lnk /tmp/.dingux-msx-ipk/root/home/retrofw/apps/gmenu2x/sections/systems
 	@sed "s/^Version:.*/Version: $$(date +%Y%m%d)/" dingux-msx/control > /tmp/.dingux-msx-ipk/control
 	@tar --owner=0 --group=0 -czvf /tmp/.dingux-msx-ipk/control.tar.gz -C /tmp/.dingux-msx-ipk/ control
 	@tar --owner=0 --group=0 -czvf /tmp/.dingux-msx-ipk/data.tar.gz -C /tmp/.dingux-msx-ipk/root/ .
