@@ -85,7 +85,7 @@ ipk: $(TARGET)
 	@ar r dingux-msx/dingux-msx.ipk /tmp/.dingux-msx-ipk/control.tar.gz /tmp/.dingux-msx-ipk/data.tar.gz /tmp/.dingux-msx-ipk/debian-binary
 
 clean:
-	rm -f $(OBJS) $(TARGET)
+	rm -f $(OBJS) $(TARGET) dingux-msx/dingux-msx.ipk
 
 ctags: 
 	ctags *[ch]
