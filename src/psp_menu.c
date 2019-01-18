@@ -75,8 +75,8 @@ enum {
 
   // MENU_EDITOR,
   MENU_CHEATS,
-  MENU_KEYBOARD,
-  MENU_JOYSTICK,
+  // MENU_KEYBOARD,
+  // MENU_JOYSTICK,
   MENU_SETTINGS,
 
   MENU_RESET,
@@ -92,9 +92,9 @@ enum {
     { "Save Screenshot" },
     // { "Volume          :" },
 
-    { "Load Slot" },
-    { "Save Slot" },
-    { "Delete Slot" },
+    { "Load state" },
+    { "Save state" },
+    { "Delete state" },
 
     // { "Help" },
 
@@ -105,8 +105,8 @@ enum {
 
     // { "Comments" },
     { "Cheats" },
-    { "Keyboard" },
-    { "Joystick" },
+    // { "Keyboard" },
+    // { "Joystick" },
     { "Settings" },
 
     { "Reset MSX" },
@@ -669,12 +669,12 @@ psp_main_menu(void)
 								  old_pad = new_pad = 0;
 			break;
 
-			case MENU_KEYBOARD   : psp_keyboard_menu();
-								   old_pad = new_pad = 0;
-			break;
-			case MENU_JOYSTICK   : psp_joystick_menu();
-								   old_pad = new_pad = 0;
-			break;
+			// case MENU_KEYBOARD   : psp_keyboard_menu();
+			// 					   old_pad = new_pad = 0;
+			// break;
+			// case MENU_JOYSTICK   : psp_joystick_menu();
+			// 					   old_pad = new_pad = 0;
+			// break;
 			case MENU_SETTINGS   : psp_settings_menu();
 								   old_pad = new_pad = 0;
 			break;

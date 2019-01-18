@@ -69,6 +69,9 @@ enum {
   MENU_SET_MSX_VERSION  ,
   MENU_SET_MSX_RAM_PAGES,
   // MENU_SET_CLOCK        ,
+  MENU_KEYBOARD,
+  MENU_JOYSTICK,
+
   MENU_SET_LOAD         ,
   MENU_SET_SAVE         ,
   MENU_SET_RESET        ,
@@ -90,6 +93,9 @@ enum {
     { "MSX version        :"},
     { "MSX ram size       :"},
     // { "Clock frequency    :"},
+    { "Keyboard" },
+    { "Joystick" },
+
     { "Load settings"       },
     { "Save settings"       },
     { "Reset settings"      },
@@ -523,6 +529,12 @@ psp_settings_menu(void)
     {
       switch (cur_menu_id ) 
       {
+        case MENU_KEYBOARD   : psp_keyboard_menu();
+                     old_pad = new_pad = 0;
+        break;
+        case MENU_JOYSTICK   : psp_joystick_menu();
+                     old_pad = new_pad = 0;
+        break;
         case MENU_SET_LOAD       : psp_settings_menu_load(FMGR_FORMAT_SET);
                                    old_pad = new_pad = 0;
         break;              
