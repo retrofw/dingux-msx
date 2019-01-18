@@ -166,20 +166,7 @@ psp_display_screen_menu(void)
       if (cur_menu_id == MENU_LOAD_SLOT) color = PSP_MENU_SEL2_COLOR;
       else if (cur_menu_id == MENU_DEL_SLOT || cur_menu_id == MENU_EXIT) color = PSP_MENU_WARNING_COLOR;
     }
-    // if (menu_id == MENU_HELP) color = PSP_MENU_GREEN_COLOR;
-
-    // if (menu_id == MENU_EDITOR) {
-    //   if (MSX.comment_present) {
-    //     psp_sdl_back2_print(x, y, "View comment", color);
-    //   } else {
-    //     psp_sdl_back2_print(x, y, "New comment", color);
-    //   }
-
-    // } else {
-
-
-      psp_sdl_back2_print(x, y, menu_list[menu_id].title, color);
-    // }
+    psp_sdl_back2_print(x, y, menu_list[menu_id].title, color);
 
 
 
@@ -195,114 +182,50 @@ psp_display_screen_menu(void)
           y += y_step;
           break;
     }
-
-
-
-    // if (menu_id == MENU_SCREENSHOT) {
-    //   sprintf(buffer,"%d", MSX.psp_screenshot_id);
-    //   string_fill_with_space(buffer, 4);
-    //   psp_sdl_back2_print(120, y, buffer, color);
-    // } else
-    // if (menu_id == MENU_VOLUME) {
-    //   sprintf(buffer,"%d", gp2xGetSoundVolume());
-    //   string_fill_with_space(buffer, 4);
-    //   psp_sdl_back2_print(120, y, buffer, color);
-    //   y += y_step;
-    // // } else
-    // if (menu_id == MENU_DEL_SLOT) {
-    //   y += y_step;
-    // } else
-    // if (menu_id == MENU_EJECT_ROM) {
-    //   y += y_step;
-    // } else
-    // if (menu_id == MENU_SETTINGS) {
-    //   y += y_step;
-    // } else
-    // if (menu_id == MENU_BACK) {
-    //   // y += y_step;
-    // } else
-    // if (menu_id == MENU_CHEATS) {
-    // } else
-    // // if (menu_id == MENU_HELP) {y += y_step; }
-
-    // y += y_step;
   }
-//   y_step = 10;
-//   y      = 35;
 
-//   for (slot_id = 0; slot_id < MSX_MAX_SAVE_STATE; slot_id++) {
-//     if (slot_id == cur_slot) color = PSP_MENU_SEL2_COLOR;
-//     else                     color = PSP_MENU_TEXT_COLOR;
+ if (cur_menu_id <= MENU_DEL_SLOT) {
+    y_step = 10;
+    y      = 20 + cur_menu_id * y_step; /* dc 20130702 */
+    x_step = 30; /* dc 20130702 */
+    x      = 142; /* dc 20130702 */
 
-//     if (MSX.msx_save_state[slot_id].used) {
-// # if defined(LINUX_MODE) || defined(WIZ_MODE)
-//       struct tm *my_date = localtime(& MSX.msx_save_state[slot_id].date);
-//       sprintf(buffer, "- %02d/%02d %02d:%02d:%02d",
-//          my_date->tm_mday, my_date->tm_mon,
-//          my_date->tm_hour, my_date->tm_min, my_date->tm_sec );
-// # else
-//       sprintf(buffer, "- used");
-// # endif
-//     } else {
-//       sprintf(buffer, "- empty");
-//     }
-//     string_fill_with_space(buffer, 32);
-//     psp_sdl_back2_print(100, y, buffer, color);
-
-//     y += y_step;
-//   }
-
-
-  y_step = 10;
-  y      = 50; /* dc 20130702 */
-  x_step = 30; /* dc 20130702 */
-  x      = 142; /* dc 20130702 */
-
-  for (slot_id = 0; slot_id < MSX_MAX_SAVE_STATE; slot_id++) {
-    if (slot_id == cur_slot) {
-      color = PSP_MENU_SEL2_COLOR;
-      switch (cur_menu_id) {
-          case MENU_SAVE_SLOT:
-            color = PSP_MENU_SEL_COLOR;
-            break;
-          case MENU_DEL_SLOT:
-            color = PSP_MENU_WARNING_COLOR;
-            break;
+    for (slot_id = 0; slot_id < MSX_MAX_SAVE_STATE; slot_id++) {
+      if (slot_id == cur_slot) {
+        color = PSP_MENU_SEL2_COLOR;
+        switch (cur_menu_id) {
+            case MENU_SAVE_SLOT:
+              color = PSP_MENU_SEL_COLOR;
+              break;
+            case MENU_DEL_SLOT:
+              color = PSP_MENU_WARNING_COLOR;
+              break;
+        }
       }
+      else color = PSP_MENU_TEXT_COLOR;
+
+      if (MSX.msx_save_state[slot_id].used) {
+        sprintf(buffer, "[x]");
+      } else {
+        sprintf(buffer, "[ ]");
+      }
+      // string_fill_with_space(buffer, 32); /* dc 20130702 */
+      // psp_sdl_back2_print(100, y, buffer, color); /* dc 20130702 */
+      psp_sdl_back2_print(x, y, buffer, color);
+
+      // y += y_step; /* dc 20130702 */
+      x += x_step;
     }
-    else                     color = PSP_MENU_TEXT_COLOR;
 
-    if (MSX.msx_save_state[slot_id].used) {
-// # if defined(LINUX_MODE) || defined(WIZ_MODE)
-//       struct tm *my_date = localtime(& ATARI.atari_save_state[slot_id].date);
-//       sprintf(buffer, "- %02d/%02d %02d:%02d:%02d",
-//          my_date->tm_mday, my_date->tm_mon, 
-//          my_date->tm_hour, my_date->tm_min, my_date->tm_sec );
-// # else
-      sprintf(buffer, "[x]");
-// # endif
-    } else {
-      sprintf(buffer, "[ ]");
+    y += 1.5*y_step;
+    x = 140;
+
+    if (MSX.msx_save_state[cur_slot].thumb) {
+      psp_sdl_blit_thumb(x,y, MSX.msx_save_state[cur_slot].surface);
+    // } else {
+      // psp_sdl_blit_thumb(170,115, thumb_surface);
     }
-    // string_fill_with_space(buffer, 32); /* dc 20130702 */
-    // psp_sdl_back2_print(100, y, buffer, color); /* dc 20130702 */
-    psp_sdl_back2_print(x, y, buffer, color);
-
-    // y += y_step; /* dc 20130702 */
-    x += x_step;
   }
-
-
-  y += 1.5*y_step;
-  x = 140;
-
-
-  if (MSX.msx_save_state[cur_slot].thumb) {
-    psp_sdl_blit_thumb(x,y, MSX.msx_save_state[cur_slot].surface);
-  // } else {
-    // psp_sdl_blit_thumb(170,115, thumb_surface);
-  }
-
   psp_menu_display_save_name();
 }
 
