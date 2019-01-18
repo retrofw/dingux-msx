@@ -59,13 +59,13 @@ or implied, of Ludovic Jacomme.
 extern SDL_Surface *back_surface;
 
 enum {
-  MENU_SCREENSHOT,
   // MENU_VOLUME,
 
   MENU_LOAD_SLOT,
   MENU_SAVE_SLOT,
   MENU_DEL_SLOT,
 
+  MENU_SCREENSHOT,
   // MENU_HELP,
 
   MENU_LOAD_ROM,
@@ -89,13 +89,13 @@ enum {
 
   static menu_item_t menu_list[] =
   {
-    { "Save Screenshot" },
     // { "Volume          :" },
 
     { "Load state" },
     { "Save state" },
     { "Delete state" },
 
+    { "Save Screenshot" },
     // { "Help" },
 
     { "Load Rom" },
@@ -115,7 +115,7 @@ enum {
     { "Exit" }
   };
 
-  static int cur_menu_id = MENU_LOAD_SLOT;
+  static int cur_menu_id = 0;
   static int cur_slot    = 0;
 
 void

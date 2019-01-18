@@ -215,7 +215,7 @@ psp_display_screen_settings_menu(void)
     //   psp_sdl_back2_print(140, y, buffer, color);
     //   y += y_step;
     // } else
-    if (menu_id == MENU_SET_VIDEO || menu_id == MENU_SET_USE_8950 || menu_id == MENU_SET_MSX_RAM_PAGES || menu_id == MENU_SET_RESET) {
+    if (menu_id == MENU_SET_VIDEO || menu_id == MENU_SET_USE_8950 || menu_id == MENU_SET_MSX_RAM_PAGES || menu_id == MENU_SET_RESET || menu_id == MENU_JOYSTICK) {
       y += y_step;
     }
 
