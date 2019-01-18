@@ -62,7 +62,7 @@ enum {
   MENU_SET_VIDEO        ,
 
   MENU_SET_SOUND        ,
-  MENU_SET_VOLUME       ,
+  // MENU_SET_VOLUME       ,
   MENU_SET_USE_2413     ,
   MENU_SET_USE_8950     ,
 
@@ -87,7 +87,7 @@ enum {
     { "Speed limiter      :"},
     { "Video Mode         :"},
     { "Sound enabled      :"},
-    { "Sound Volume       :"},
+    // { "Sound Volume       :"},
     { "Music FM-PAC       :"},
     { "Music Module       :"},
     { "MSX version        :"},
@@ -111,7 +111,7 @@ enum {
   static int msx_render_mode      = 0;
   static int msx_speed_limiter    = 60;
   static int psp_cpu_clock        = GP2X_DEF_EMU_CLOCK;
-  static int psp_sound_volume     = 1;
+  static int psp_sound_volume     = 60;
   static int msx_version          = 0;
   static int msx_ram_pages        = 16;
   static int msx_ntsc             = 1;
@@ -178,11 +178,11 @@ psp_display_screen_settings_menu(void)
       string_fill_with_space(buffer, 4);
       psp_sdl_back2_print(140, y, buffer, color);
     } else
-    if (menu_id == MENU_SET_VOLUME) {
-      sprintf(buffer,"%d", psp_sound_volume);
-      string_fill_with_space(buffer, 7);
-      psp_sdl_back2_print(140, y, buffer, color);
-    } else
+    // if (menu_id == MENU_SET_VOLUME) {
+    //   sprintf(buffer,"%d", psp_sound_volume);
+    //   string_fill_with_space(buffer, 7);
+    //   psp_sdl_back2_print(140, y, buffer, color);
+    // } else
     if (menu_id == MENU_SET_USE_8950) {
       if (msx_use_8950) strcpy(buffer,"yes");
       else              strcpy(buffer,"no ");
@@ -500,8 +500,8 @@ psp_settings_menu(void)
       {
         case MENU_SET_SPEED_LIMIT : psp_settings_menu_limiter( step );
         break;              
-        case MENU_SET_VOLUME     : psp_settings_menu_volume( step );
-        break;              
+        // case MENU_SET_VOLUME     : psp_settings_menu_volume( step );
+        // break;              
         case MENU_SET_MSX_VERSION : psp_settings_menu_msx_version( step );
         break;
         case MENU_SET_MSX_RAM_PAGES : psp_settings_menu_msx_ram_pages( step );
