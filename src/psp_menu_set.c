@@ -565,10 +565,9 @@ psp_settings_menu(void)
 
   psp_kbd_wait_no_button();
 
-  psp_sdl_clear_screen( PSP_MENU_BLACK_COLOR );
-  psp_sdl_flip();
-  psp_sdl_clear_screen( PSP_MENU_BLACK_COLOR );
-  psp_sdl_flip();
+  psp_sdl_clear_screen( PSP_MENU_BLACK_COLOR ); psp_sdl_flip();
+  psp_sdl_clear_screen( PSP_MENU_BLACK_COLOR ); psp_sdl_flip();
+  psp_sdl_clear_screen( PSP_MENU_BLACK_COLOR ); psp_sdl_flip();
 
   return 1;
 }

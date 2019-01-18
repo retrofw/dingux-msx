@@ -679,7 +679,13 @@ psp_sdl_init(void)
   psp_sdl_select_font_6x10();
   // ScreenSurface=SDL_SetVideoMode(320, 480, 16, SDL_HWSURFACE);
   // back_surface = SDL_CreateRGBSurface(SDL_SWSURFACE, PSP_SDL_SCREEN_WIDTH, PSP_SDL_SCREEN_HEIGHT, 16, 0, 0, 0, 0);
-  back_surface = SDL_SetVideoMode(PSP_SDL_SCREEN_WIDTH, PSP_SDL_SCREEN_HEIGHT, 16, SDL_HWSURFACE | SDL_DOUBLEBUF);
+  back_surface = SDL_SetVideoMode(PSP_SDL_SCREEN_WIDTH, PSP_SDL_SCREEN_HEIGHT, 16, SDL_HWSURFACE |
+#ifdef SDL_TRIPLEBUF
+    SDL_TRIPLEBUF
+#else
+    SDL_DOUBLEBUF
+#endif
+  );
 
   if ( !back_surface) {
     return 0;
