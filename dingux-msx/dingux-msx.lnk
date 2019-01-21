@@ -1,7 +1,6 @@
 title=Dingux MSX
 description=MSX Emulator
 exec=/home/retrofw/emus/dingux-msx/dingux-msx.dge
-selectorbrowser=true
 selectordir=/home/retrofw/roms/msx
 selectorfilter=.zip,.rom,.mx1,.mx2,.dsk
 clock=600
