@@ -79,6 +79,7 @@ ipk: $(TARGET)
 	@cp dingux-msx/dingux-msx.lnk /tmp/.dingux-msx-ipk/root/home/retrofw/apps/gmenu2x/sections/emulators
 	@cp dingux-msx/msx.dingux-msx.lnk /tmp/.dingux-msx-ipk/root/home/retrofw/apps/gmenu2x/sections/systems
 	@sed "s/^Version:.*/Version: $$(date +%Y%m%d)/" dingux-msx/control > /tmp/.dingux-msx-ipk/control
+	@cp dingux-msx/conffiles /tmp/.dingux-msx-ipk/
 	@tar --owner=0 --group=0 -czvf /tmp/.dingux-msx-ipk/control.tar.gz -C /tmp/.dingux-msx-ipk/ control
 	@tar --owner=0 --group=0 -czvf /tmp/.dingux-msx-ipk/data.tar.gz -C /tmp/.dingux-msx-ipk/root/ .
 	@echo 2.0 > /tmp/.dingux-msx-ipk/debian-binary
