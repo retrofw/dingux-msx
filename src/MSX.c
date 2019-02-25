@@ -2744,8 +2744,8 @@ loc_msx_load_settings(char *chFileName)
     else
     if (!strcasecmp(Buffer,"psp_skip_max_frame")) MSX.psp_skip_max_frame = Value;
     else
-    if (!strcasecmp(Buffer,"psp_sound_volume"))  MSX.psp_sound_volume = Value;
-    else
+    // if (!strcasecmp(Buffer,"psp_sound_volume"))  MSX.psp_sound_volume = Value;
+    // else
     if (!strcasecmp(Buffer,"msx_use_8950"))     MSX.msx_use_8950 = Value;
     else
     if (!strcasecmp(Buffer,"msx_uperiod"))     MSX.msx_uperiod = Value;
