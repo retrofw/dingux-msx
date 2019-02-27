@@ -41,7 +41,18 @@ int
 SDL_main(int argc,char *argv[])
 {
   memset(&MSX, 0, sizeof(MSX_t));
-  strcpy(MSX.msx_home_dir,".");
+
+  static char *home_dir[MAX_PATH];
+  snprintf(MSX.msx_home_dir, sizeof(MSX.msx_home_dir), "%s/.dingux-msx", getenv("HOME")); mkdir(home_dir, 0777);
+  snprintf(home_dir, MAX_PATH, "%s/cht",  MSX.msx_home_dir); mkdir(home_dir, 0777);
+  snprintf(home_dir, MAX_PATH, "%s/disk", MSX.msx_home_dir); mkdir(home_dir, 0777);
+  snprintf(home_dir, MAX_PATH, "%s/joy",  MSX.msx_home_dir); mkdir(home_dir, 0777);
+  snprintf(home_dir, MAX_PATH, "%s/kbd",  MSX.msx_home_dir); mkdir(home_dir, 0777);
+  snprintf(home_dir, MAX_PATH, "%s/roms", MSX.msx_home_dir); mkdir(home_dir, 0777);
+  snprintf(home_dir, MAX_PATH, "%s/save", MSX.msx_home_dir); mkdir(home_dir, 0777);
+  snprintf(home_dir, MAX_PATH, "%s/scr",  MSX.msx_home_dir); mkdir(home_dir, 0777);
+  snprintf(home_dir, MAX_PATH, "%s/set",  MSX.msx_home_dir); mkdir(home_dir, 0777);
+  snprintf(home_dir, MAX_PATH, "%s/txt",  MSX.msx_home_dir); mkdir(home_dir, 0777);
 
   psp_sdl_init();
 

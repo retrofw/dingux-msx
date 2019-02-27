@@ -27,7 +27,7 @@ static int selected_y = 1;
 
 //Variable describing where each of the images is
 #define guiStringsSize 12 /* size of guistrings array */
-#define PICS_BASEDIR "/graphics/"
+#define PICS_BASEDIR "./graphics/"
 
 static char *guiStrings[] = 
 {
@@ -216,15 +216,11 @@ surface_draw(SDL_Surface* pixels)
 void
 danzeff_init_skin()
 {
-  char skin_path[128];
-  strcpy(skin_path, MSX.msx_home_dir);
-  strcat(skin_path, PICS_BASEDIR);
-
-  psp_kbd_last_skin = psp_fmgr_get_dir_list(skin_path, GP2X_KBD_MAX_SKIN, psp_kbd_skin_dir) - 1;
+  psp_kbd_last_skin = psp_fmgr_get_dir_list(PICS_BASEDIR, GP2X_KBD_MAX_SKIN, psp_kbd_skin_dir) - 1;
  
   /* Should not happen ! */
   if (psp_kbd_last_skin < 0) {
-    fprintf(stdout, "no keyboard skin in %s directory !\n", skin_path);
+    fprintf(stdout, "no keyboard skin in %s directory !\n", PICS_BASEDIR);
     exit(1);
   }
 
@@ -252,8 +248,7 @@ danzeff_load()
 	int a;
 	for (a = 0; a < guiStringsSize; a++)
 	{
-    strcpy(tmp_filename, MSX.msx_home_dir );
-    strcat(tmp_filename, PICS_BASEDIR);
+    strcpy(tmp_filename, PICS_BASEDIR);
     strcat(tmp_filename, psp_kbd_skin_dir[psp_kbd_skin] );
     strcat(tmp_filename, guiStrings[a] );
 		keyBits[a] = IMG_Load(tmp_filename);
