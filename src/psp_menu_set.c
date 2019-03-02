@@ -62,7 +62,7 @@ enum {
   MENU_SET_VIDEO        ,
 
   MENU_SET_SOUND        ,
-  // MENU_SET_VOLUME       ,
+  MENU_SET_VOLUME       ,
   MENU_SET_USE_2413     ,
   MENU_SET_USE_8950     ,
 
@@ -178,11 +178,11 @@ psp_display_screen_settings_menu(void)
       string_fill_with_space(buffer, 4);
       psp_sdl_back2_print(140, y, buffer, color);
     } else
-    // if (menu_id == MENU_SET_VOLUME) {
-    //   sprintf(buffer,"%d", psp_sound_volume);
-    //   string_fill_with_space(buffer, 7);
-    //   psp_sdl_back2_print(140, y, buffer, color);
-    // } else
+    if (menu_id == MENU_SET_VOLUME) {
+      sprintf(buffer,"%d", psp_sound_volume);
+      string_fill_with_space(buffer, 7);
+      psp_sdl_back2_print(140, y, buffer, color);
+    } else
     if (menu_id == MENU_SET_USE_8950) {
       if (msx_use_8950) strcpy(buffer,"yes");
       else              strcpy(buffer,"no ");
@@ -500,8 +500,8 @@ psp_settings_menu(void)
       {
         case MENU_SET_SPEED_LIMIT : psp_settings_menu_limiter( step );
         break;              
-        // case MENU_SET_VOLUME     : psp_settings_menu_volume( step );
-        // break;              
+        case MENU_SET_VOLUME     : psp_settings_menu_volume( step );
+        break;              
         case MENU_SET_MSX_VERSION : psp_settings_menu_msx_version( step );
         break;
         case MENU_SET_MSX_RAM_PAGES : psp_settings_menu_msx_ram_pages( step );

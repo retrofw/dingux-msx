@@ -148,16 +148,12 @@ psp_display_screen_menu(void)
   int menu_id = 0;
   int slot_id = 0;
   int color   = 0;
-  int x       = 0;
-  int y       = 0;
-  int y_step  = 0;
-  int x_step  = 0; /* dc 20130702 */
+  int x       = 10;
+  int y       = 20;
+  int y_step  = 10;
+  int x_step  = 30; /* dc 20130702 */
 
   psp_sdl_blit_background();
-
-  x      = 10;
-  y      = 20; /* dc 20130702 */
-  y_step = 10;
 
   for (menu_id = 0; menu_id < MAX_MENU_ITEM; menu_id++, y += y_step) {
     color = PSP_MENU_TEXT_COLOR;
@@ -185,9 +181,7 @@ psp_display_screen_menu(void)
   }
 
  if (cur_menu_id <= MENU_DEL_SLOT) {
-    y_step = 10;
     y      = 20 + cur_menu_id * y_step; /* dc 20130702 */
-    x_step = 30; /* dc 20130702 */
     x      = 142; /* dc 20130702 */
 
     for (slot_id = 0; slot_id < MSX_MAX_SAVE_STATE; slot_id++) {
