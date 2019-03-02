@@ -87,7 +87,7 @@ enum {
     { "Speed limiter      :"},
     { "Video Mode         :"},
     { "Sound enabled      :"},
-    // { "Sound Volume       :"},
+    { "Sound Volume       :"},
     { "Music FM-PAC       :"},
     { "Music Module       :"},
     { "MSX version        :"},
