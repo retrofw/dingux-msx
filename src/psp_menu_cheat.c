@@ -119,19 +119,15 @@ psp_display_screen_cheat_menu(void)
   int color   = 0;
   int cheat_id = 0;
   int addr_id = 0;
-  int x       = 0;
-  int y       = 0;
-  int y_step  = 0;
+  int x       = 10;
+  int y       = 20;
+  int y_step  = 10;
   int sav_y   = 0;
   int first   = 0;
   char* scan  = 0;
 
   psp_sdl_blit_help();
 
-  x      = 10;
-  y      = 20;
-  y_step = 10;
-  
   for (menu_id = 0; menu_id < MAX_MENU_CHEAT_ITEM; menu_id++) {
     color = PSP_MENU_TEXT_COLOR;
     // if (menu_id == MENU_CHEAT_DEL) color = PSP_MENU_NOTE_COLOR;

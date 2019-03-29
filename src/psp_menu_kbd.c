@@ -154,15 +154,11 @@ psp_display_screen_kbd_menu(void)
   int kbd_id  = 0;
   int msx_key = 0;
   int color   = 0;
-  int x       = 0;
-  int y       = 0;
-  int y_step  = 0;
+  int x       = 10;
+  int y       = 50;
+  int y_step  = 10;
 
   psp_sdl_blit_help();
-
-  x      = 10;
-  y      = 5;
-  y_step = 10;
   
   for (menu_id = 0; menu_id < MAX_MENU_KBD_ITEM; menu_id++, y += y_step) 
   {
@@ -480,8 +476,6 @@ psp_keyboard_menu(void)
       psp_keyboard_select_change(+1);
       psp_kbd_wait_no_button();
     } else
-
-
     if ((new_pad == GP2X_CTRL_LEFT ) || (new_pad == GP2X_CTRL_RIGHT))
     {
       int step = 1;
