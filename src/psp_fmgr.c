@@ -375,7 +375,6 @@ static  int sel=0;
 
   current_comment = 0;
 
-
   memset(files, 0x00, sizeof(struct dirent) * GP2X_FMGR_MAX_ENTRY);
   memset(sortfiles, 0x00, sizeof(struct dirent *) * GP2X_FMGR_MAX_ENTRY);
   nfiles = 0;

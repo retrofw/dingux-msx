@@ -109,7 +109,7 @@ enum {
     // { "Joystick" },
     { "Settings" },
 
-    { "Reset MSX" },
+    { "Reset" },
     // { "Back to MSX" },
 
     { "Exit" }
@@ -163,8 +163,6 @@ psp_display_screen_menu(void)
       else if (cur_menu_id == MENU_DEL_SLOT || cur_menu_id == MENU_EXIT) color = PSP_MENU_WARNING_COLOR;
     }
     psp_sdl_back2_print(x, y, menu_list[menu_id].title, color);
-
-
 
     switch (menu_id) {
         case MENU_SCREENSHOT:
@@ -434,9 +432,9 @@ psp_main_menu_exit(void)
   //   c.Buttons &= PSP_ALL_BUTTON_MASK;
 
   //   if (c.Buttons & GP2X_CTRL_CROSS) {
-      psp_sdl_clear_screen(0); psp_sdl_flip();
-      psp_sdl_clear_screen(0); psp_sdl_flip();
-      psp_sdl_clear_screen(0); psp_sdl_flip();
+      // psp_sdl_clear_screen(0); psp_sdl_flip();
+      // psp_sdl_clear_screen(0); psp_sdl_flip();
+      // psp_sdl_clear_screen(0); psp_sdl_flip();
       psp_sdl_exit(0);
   //   }
 

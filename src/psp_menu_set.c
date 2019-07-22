@@ -519,7 +519,6 @@ psp_settings_menu(void)
         case MENU_SET_VIDEO      : msx_ntsc = ! msx_ntsc;
         break;
       }
-
     } else
     if ((new_pad == GP2X_CTRL_CIRCLE))
     {
