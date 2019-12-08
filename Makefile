@@ -1,7 +1,7 @@
 #
-# MSX port on RS-97
+# Dingux MSX for the RetroFW
 #
-# by pingflood; 2018
+# by pingflood; 2019
 #
 
 CHAINPREFIX := /opt/mipsel-linux-uclibc
@@ -14,8 +14,8 @@ STRIP = $(CROSS_COMPILE)strip
 SYSROOT     := $(shell $(CC) --print-sysroot)
 
 MSX_VERSION=1.1.0
+TARGET = dingux-msx/dingux-msx.dge
 
-TARGET = ./dingux-msx/dingux-msx.dge
 SDL_CONFIG = $(SYSROOT)/usr/bin/sdl-config
 OBJS = ./src/gp2x_psp.o \
 ./src/cpudingux.o \
@@ -64,7 +64,7 @@ LIBS += -B$(SYSROOT)/usr/lib
 LIBS += -R$(SYSROOT)/usr/lib
 LIBS += -L$(SYSROOT)/usr/lib
 
-CFLAGS = $(DEFAULT_CFLAGS) $(MORE_CFLAGS) 
+CFLAGS = $(DEFAULT_CFLAGS) $(MORE_CFLAGS)
 
 .c.o:
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -85,8 +85,22 @@ ipk: $(TARGET)
 	@echo 2.0 > /tmp/.dingux-msx-ipk/debian-binary
 	@ar r dingux-msx/dingux-msx.ipk /tmp/.dingux-msx-ipk/control.tar.gz /tmp/.dingux-msx-ipk/data.tar.gz /tmp/.dingux-msx-ipk/debian-binary
 
-clean:
-	rm -f $(OBJS) $(TARGET) dingux-msx/dingux-msx.ipk
+opk: $(TARGET)
+	@mksquashfs \
+	dingux-msx/default.retrofw.desktop \
+	dingux-msx/msx.retrofw.desktop \
+	dingux-msx/*.rom \
+	dingux-msx/dingux-msx.dge \
+	dingux-msx/dingux-msx.man.txt \
+	dingux-msx/dingux-msx.png \
+	dingux-msx/splash.png \
+	dingux-msx/thumb.png \
+	dingux-msx/graphics \
+	dingux-msx/dingux-msx.opk \
+	-all-root -noappend -no-exports -no-xattrs
 
-ctags: 
+ctags:
 	ctags *[ch]
+
+clean:
+	rm -f $(OBJS) $(TARGET) ./dingux-msx/dingux-msx.ipk

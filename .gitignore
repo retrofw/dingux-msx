@@ -1,3 +1,7 @@
-/src/*.o
-/dingux-msx/dingux-msx.dge
 *.ipk
+*.opk
+*.dge
+*.elf
+*.o
+*.a
+/.project

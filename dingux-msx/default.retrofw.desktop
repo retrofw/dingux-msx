@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Dingux MSX
+Comment=MSX Emulator
+Exec=dingux-msx.dge %f
+Icon=dingux-msx
+Categories=emulators;
+X-OD-Manual=dingux-msx.man.txt
+X-OD-Filter=.zip,.rom,.mx1,.mx2,.dsk
+Terminal=false
+Type=Application
+StartupNotify=true
