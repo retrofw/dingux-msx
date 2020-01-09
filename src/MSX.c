@@ -3385,7 +3385,7 @@ msx_load_rom(char *FileName, int zip_format)
       return -1;
     }
     
-    FILE *out = fopen("romtmp.rom", "wb" );
+    FILE *out = fopen("/tmp/romtmp.rom", "wb" );
     if ( out == NULL )
     {
       printf( "could not open destination file\n" );
@@ -3414,7 +3414,7 @@ msx_load_rom(char *FileName, int zip_format)
 
         fclose( out );
         unzCloseCurrentFile( zipfile );
-    snprintf(CartA, sizeof(CartA), "./%s", "romtmp.rom");
+    snprintf(CartA, sizeof(CartA), "/tmp/%s", "romtmp.rom");
     error = loc_load_rom(CartA);
     remove(CartA);
   } 
